@@ -1,6 +1,6 @@
 # LBrand
-### Author: Hoang Quoc Khanh (rianta9)
-### Description: Khoá Luận Tốt Nghiệp Đề Tài "Xây Dựng Trang Web Đặt Bàn Trực Tuyến LBrand"
+Author: Hoang Quoc Khanh (rianta9)  
+Description: Khoá Luận Tốt Nghiệp Đề Tài "Xây Dựng Trang Web Đặt Bàn Trực Tuyến LBrand"  
 --------------------------------------------
 ## CÀI ĐẶT CHƯƠNG TRÌNH
 --------------------------------------------

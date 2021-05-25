@@ -1,0 +1,383 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<th:block th:replace="/fragments/web-fragments::web-head-fragment"></th:block>
+<title>LBrand - Đơn Đặt Bàn</title>
+
+</head>
+
+<body>
+
+	<div class="main-wrapper">
+
+		<header class="fl-header"
+			th:replace="/fragments/web-fragments::web-header-fragment">
+
+		</header>
+
+
+
+		<!-- MAIN CONTENT -->
+		<!-- breadcrumb-area start -->
+		<div class="container" style="background-color: #eee">
+			<div class="row mt-3">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb" style="background-color: #eee">
+						<li class="breadcrumb-item"><a th:href="@{/home}">Trang
+								Chủ</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Chi
+							Tiết Đơn Đặt Bàn</li>
+
+					</ol>
+				</nav>
+			</div>
+
+		</div>
+		<!-- breadcrumb-area end -->
+
+		<!-- main-content-wrap start -->
+		<div class="main-content-wrap my-account-page">
+			<div class="container mb-3">
+				<div class="row pt-3 pb-3">
+					<div class="col-12">
+						<div class="account-dashboard">
+
+							<div class="row">
+								<div class="col-md-12 col-lg-2">
+									<!-- Nav tabs -->
+									<ul class="nav flex-column dashboard-list">
+										<li><a href="/my-account" 
+											class="nav-link active">Thông tin tài khoản</a></li>
+										<li><a href="/my-account#notification" 
+											class="nav-link">Thông báo của tôi</a></li>
+										<li><a href="/my-account/booking-history"
+											 class="nav-link">Đơn đặt bàn</a></li>
+										<li><a href="/my-account/review" class="nav-link"
+											>Đánh giá thương hiệu</a></li>
+										<li><a href="/logout" class="nav-link">Đăng xuất</a></li>
+									</ul>
+								</div>
+								<div class="col-md-12 col-lg-10">
+									<!-- Tab panes -->
+									<div class="dashboard-content">
+
+										<div>
+											<h3
+												th:text="'Đơn Đặt Bàn: #' + ${booking.getStringId} + ' - ' + ${booking.bookingStatus.bookingStatusName}"
+												class="font-weight-normal"></h3>
+
+											<div class="row pb-4 mb-4">
+												<div class="col-md-4  mb-4 mt-4">
+													<p class="font-weight-bold">Thông Tin Người Dùng</p>
+													<div class="card h-100">
+														<div class="card-body">
+															<ul>
+																<li th:text="'Liên lạc: ' + ${booking.contactInfo}"></li>
+																<li th:text="'Ghi chú: ' + ${booking.note != null ? booking.note:''}"></li>
+															</ul>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-4 mb-4 mt-4">
+													<p class="font-weight-bold">Thông Tin Đặt Bàn</p>
+													<div class="card h-100">
+														<div class="card-body">
+															<ul>
+																<li
+																	th:text="'Hình thức đặt bàn: ' + ${booking.getBookingType}"></li>
+																<li
+																	th:text="'Thời điểm đến: ' + ${booking.getStringTimeIn} + ' ' + ${booking.getStringDateIn}"></li>
+																<li
+																	th:text="'Số người lớn: ' + ${booking.numberOfAdults}"></li>
+																<li
+																	th:text="'Số trẻ em: ' + ${booking.numberOfChildren}"></li>
+															</ul>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-4 mb-4 mt-4">
+													<p class="font-weight-bold">Thông Tin Thanh Toán</p>
+													<div class="card h-100">
+														<div class="card-body">
+															<ul>
+																<li
+																	th:text="'Số tiền đặt cọc: ' + ${booking.getStringDeposit}"></li>
+																<li
+																	th:text="'Hình thức thanh toán: ' + ${booking.paymentMethod.paymentMethodName}"></li>
+																<li
+																	th:if="${booking.needPayment}">
+																	
+																	<button class="btn btn-dark w-100 mt-4" type="button" th:onclick="|paymentBooking(${booking.bookingId})|">Thanh toán</button>
+																	</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="row pb-4 mb-4">
+												<div class="col-12">
+													<p class="font-weight-bold">Thông Tin Thương Hiệu</p>
+													<div class="card">
+														<div class="card-body">
+															<ul>
+																<li><a
+																	th:href="@{/brand/} + ${booking.brandCapacity.brand.brandId}"
+																	th:text="'Thương hiệu: ' + ${booking.brandCapacity.brand.brandName}"></a></li>
+																<li
+																	th:text="'Địa chỉ: ' + ${booking.brandCapacity.brand.address}"></li>
+																<li
+																	th:text="'SĐT: ' + ${booking.brandCapacity.brand.phone}"></li>
+
+															</ul>
+															<div class="pt-3" style="background-color: white">
+																<!-- Start Single Content -->
+																<div class="active" id="brand-map">
+
+																	<th:block
+																		th:if="${booking.brandCapacity.brand?.positionLat != null && booking.brandCapacity.brand?.positionLng != null}">
+																		<script th:inline="javascript">
+      // In this example, we center the map, and add a marker, using a LatLng object
+      // literal instead of a google.maps.LatLng object. LatLng object literals are
+      // a convenient way to add a LatLng coordinate and, in most cases, can be used
+      // in place of a google.maps.LatLng object.
+      let map;
+
+      function initMap() {
+        const mapOptions = {
+          zoom: 15,
+          center: { lat: /*[[${booking.brandCapacity.brand.positionLat}]]*/ -34.397, lng: /*[[${booking.brandCapacity.brand.positionLng}]]*/ 150.644 },
+        };
+        map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        const marker = new google.maps.Marker({
+          // The below line is equivalent to writing:
+          // position: new google.maps.LatLng(-34.397, 150.644)
+          position: { lat: /*[[${booking.brandCapacity.brand.positionLat}]]*/ -34.397, lng: /*[[${booking.brandCapacity.brand.positionLng}]]*/ 150.644 },
+          map: map,
+        });
+        // You can use a LatLng literal in place of a google.maps.LatLng object when
+        // creating the Marker object. Once the Marker object is instantiated, its
+        // position will be available as a google.maps.LatLng object. In this case,
+        // we retrieve the marker's position using the
+        // google.maps.LatLng.getPosition() method.
+        const infowindow = new google.maps.InfoWindow({
+          content: "<p>Marker Location:" + marker.getPosition() + "</p>",
+        });
+        google.maps.event.addListener(marker, "click", () => {
+          infowindow.open(map, marker);
+        });
+      }
+    </script>
+																	</th:block>
+
+																	<div id="map" style="height: 500px"></div>
+																	<script
+																		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9_Cc7uje6Lz9mc-kyTQQCTZSeI3V22pU&callback=initMap&libraries=&v=weekly"></script>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+
+											<th:block
+												th:if="${booking?.listBookingServiceDetail?.size != 0}">
+												<p class="font-weight-bold">Chi Tiết Dịch Vụ</p>
+												<div class="table-responsive mb-4">
+													<table class="table">
+														<thead>
+															<tr>
+																<th colspan="2">Dịch Vụ</th>
+																<th>Giá Người Lớn</th>
+																<th>Giá Trẻ Em</th>
+																<th>Tổng Tiền</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:each="item:${booking.listBookingServiceDetail}">
+																<td class="align-middle" width="125"><img alt=""
+																	th:src="@{/} + ${item.service?.avatar}" width="120px"
+																	height="80px"></td>
+																<td><a
+																	th:href="@{/service/} + ${item.service?.serviceId}"
+																	th:text="${item.service?.serviceName}"></a></td>
+																<td
+																	th:text="${booking.numberOfAdults} + ' ngườix' + ${item.getStringSalePriceForAdult}">200.000
+																	VNĐ</td>
+																<td
+																	th:text="${booking.numberOfChildren} + ' ngườix' + ${item.getStringSalePriceForChildren}">100.000
+																	VNĐ</td>
+																<td th:text=${booking.getStringTotalPriceOfService}>1.000.000
+																	VNĐ</td>
+															</tr>
+
+														</tbody>
+													</table>
+												</div>
+											</th:block>
+											<th:block
+												th:if="${booking?.listBookingProductDetail?.size != 0}">
+												<p class="font-weight-bold">Danh Sách Sản Phẩm</p>
+												<div class="table-responsive mb-4">
+													<table class="table">
+														<thead>
+															<tr>
+																<th colspan="2">Sản Phẩm</th>
+																<th>Giá</th>
+																<th>Số Lượng</th>
+																<th>Tổng Tiền</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:each="item:${booking.listBookingProductDetail}">
+																<td class="align-middle" width="125"><img alt=""
+																	th:src="@{/} + ${item.product.avatar}" width="120px"
+																	height="80px"></td>
+																<td><a
+																	th:href="@{/product/} + ${item.product.productId}"
+																	th:text="${item.product.productName}"></a></td>
+																<td th:text="${item.getStringSalePrice}">100.000
+																	VNĐ</td>
+																<td th:text="${item.quantity}">10</td>
+																<td th:text=${item.getStringTotalPrice}>1.000.000
+																	VNĐ</td>
+															</tr>
+
+														</tbody>
+													</table>
+												</div>
+											</th:block>
+										</div>
+										<div class="row mt-4 border-top pt-4">
+											<table class="ml-auto mr-1 total-price-table">
+												<thead>
+													<tr>
+														<th style="min-width: 150px"></th>
+														<th style="min-width: 150px"></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>Tạm tính</td>
+														<td
+															th:text="${booking.getStringTotalPriceWithoutDiscount}"></td>
+													</tr>
+													<tr>
+														<td>Giảm giá</td>
+														<td th:text="${booking.getStringDiscountMoney}"></td>
+													</tr>
+													<tr>
+														<td>Tổng</td>
+														<td th:text="${booking.getStringTotalPrice}"></td>
+													</tr>
+
+												</tbody>
+											</table>
+										</div>
+										<th:block th:if="${booking.canCancel}">
+										<div class="row d-flex">
+											<a class="btn btn-outline-dark ml-auto mr-1 mt-3" th:href="@{/my-account/booking-detail/}+${booking.bookingId}+'/cancel'">Huỷ đặt bàn</a>
+										</div>
+										</th:block>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- main-content-wrap end -->
+		<!-- END MAIN CONTENT -->
+
+
+		<footer th:replace="/fragments/web-fragments::web-footer-fragment">
+
+		</footer>
+
+
+
+	</div>
+
+	<!-- JS
+============================================ -->
+
+	<!-- Modernizer JS -->
+	<script th:src="@{/web/assets/js/vendor/modernizr-3.6.0.min.js}"
+		src="../../web/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<!-- jQuery JS -->
+	<script th:src="@{/web/assets/js/vendor/jquery-3.3.1.min.js}"
+		src="../../web/assets/js/vendor/jquery-3.3.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script th:src="@{/web/assets/js/vendor/popper.min.js}"
+		src="../../web/assets/js/vendor/popper.min.js"></script>
+	<script th:src="@{/web/assets/js/vendor/bootstrap.min.js}"
+		src="../../web/assets/js/vendor/bootstrap.min.js"></script>
+
+	<!-- Slick Slider JS -->
+	<script th:src="@{/web/assets/js/plugins/slick.min.js}"
+		src="../../web/assets/js/plugins/slick.min.js"></script>
+	<!--  Jquery ui JS -->
+	<script th:src="@{/web/assets/js/plugins/jqueryui.min.js}"
+		src="../../web/assets/js/plugins/jqueryui.min.js"></script>
+	<!--  Scrollup JS -->
+	<script th:src="@{/web/assets/js/plugins/scrollup.min.js}"
+		src="../../web/assets/js/plugins/scrollup.min.js"></script>
+	<script th:src="@{/web/assets/js/plugins/ajax-contact.js}"
+		src="../../web/assets/js/plugins/ajax-contact.js"></script>
+
+	<!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+	<!--
+	<script src="../../web/assets/js/vendor/vendor.min.js"></script>
+	<script src="../../web/assets/js/plugins/plugins.min.js"></script>
+	-->
+
+	<script
+		src="https://rawgit.com/notifyjs/notifyjs/master/dist/notify.js"></script>
+
+
+	<!-- Main JS -->
+	<script th:src="@{/web/assets/js/main.js}"
+		src="../../web/assets/js/main.js"></script>
+
+	<script th:src="@{/web/assets/js/brand-detail.js}"
+		src="/web/assets/js/brand-detail.js"></script>
+
+	<script type="text/javascript">
+		function showChangePasswordDiv() {
+			var changePasswordDiv = document
+					.getElementById("changePasswordDiv");
+			if (document.getElementById("changePassword").checked) {
+				changePasswordDiv.classList.remove("hidden");
+			} else {
+				changePasswordDiv.classList.add("hidden");
+			}
+		}
+
+		function checkConfirmPassword() {
+			var newPassword = document.getElementById("newPassword").value;
+			var confirmNewPassword = document
+					.getElementById("confirmNewPassword").value;
+			var notification = document
+					.getElementById("confirm_password_message");
+			if (newPassword != "") {
+				notification.classList.remove("hidden");
+				if (newPassword != confirmNewPassword) {
+					notification.style.color = 'red';
+					notification.innerHTML = 'Mật khẩu không trùng khớp!';
+				} else {
+					notification.style.color = 'green';
+					notification.innerHTML = 'Mật khẩu trùng khớp!';
+				}
+			} else {
+				notification.classList.add("hidden");
+			}
+		}
+	</script>
+
+</body>
+
+</html>

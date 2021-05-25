@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head>
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Brand Admin - Tạo Mới Sản Phẩm</title>
+</head>
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/brand-admin-menu::brand-admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<th:block th:if="${notification}" )>
+						<div class="toast toast-absolute" role="alert"
+							aria-live="assertive" aria-atomic="true" data-delay="3000">
+							<div class="toast-header">
+								<strong class="mr-auto">Thông báo</strong>
+								<button type="button" class="ml-2 mb-1 close"
+									data-dismiss="toast" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="toast-body" th:text="${notification}"></div>
+						</div>
+					</th:block>
+					<ol class="breadcrumb mb-4">
+						<li class="breadcrumb-item"><a href="/brand-admin/home">Dashboard</a></li>
+						<li class="breadcrumb-item"><a
+							href="/brand-admin/product/list">Quản Lý Sản Phẩm</a></li>
+						<li class="breadcrumb-item active">Thêm Sản Phẩm</li>
+					</ol>
+					<div class="card mb-4 mt-3">
+						<div class="card-header">
+							<i class="fas fa-table mr-1"></i> Sản Phẩm
+						</div>
+						<div class="card-body">
+							<form th:action="@{/brand-admin/product/create}"
+								enctype="multipart/form-data" method="POST"
+								th:object="${productForm}">
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="productName" class="font-weight-bold">Tên
+											Sản Phẩm</label> <input type="text" class="form-control"
+											id="productName" name="productName" th:field="*{productName}"
+											th:value="*{productName}" placeholder="Nhập tên sản phẩm"
+											maxlength="255" required>
+										<p th:if="${#fields.hasErrors('productName')}"
+											th:errorclass="error" th:errors="*{productName}" />
+										<label for="fileImage">Ảnh đại diện:</label> <input
+											class="form-control" type="file" name="fileImage"
+											th:field="*{fileImage}" id="file-input"
+											accept="image/png, image/jpeg"
+											th:onchange="previewImageBefore(event)" required></input>
+										<p th:if="${#fields.hasErrors('fileImage')}"
+											th:errorclass="error" th:errors="*{fileImage}" />
+
+									</div>
+									<div class="form-group col-md-6">
+										<img id="previewImage" th:src="*{avatar}" class="img-preview">
+									</div>
+
+								</div>
+
+								<div class="form-row">
+									<div class="form-group col-md-4">
+										<label for="categoryId" class="font-weight-bold">Danh
+											Mục</label> <select class="form-control" id="categoryId"
+											name="categoryId" th:field="*{categoryId}" required>
+											<option th:each="item: ${listCategory}"
+												th:value="${item.categoryId}"
+												th:selected="${productForm.categoryId == item.categoryId}"
+												th:text="${item.categoryName}"></option>
+										</select>
+										<p th:if="${#fields.hasErrors('categoryId')}"
+											th:errorclass="error" th:errors="*{categoryId}" />
+									</div>
+									<div class="form-group col-md-4">
+										<label for="productTypeId" class="font-weight-bold">Loại
+											Sản Phẩm</label> <select class="form-control" id="productTypeId"
+											name="productTypeId" th:field="*{productTypeId}" required>
+											<option th:each="item: ${listProductType}"
+												th:value="${item.productTypeId}"
+												th:selected="${productForm.productTypeId == item.productTypeId}"
+												th:text="${item.productTypeName}"></option>
+										</select>
+										<p th:if="${#fields.hasErrors('productTypeId')}"
+											th:errorclass="error" th:errors="*{productTypeId}" />
+									</div>
+
+									<div class="form-group col-md-4">
+										<label for="productUnitId" class="font-weight-bold">Đơn
+											Vị</label> <select class="form-control" id="productUnitId"
+											name="productUnitId" th:field="*{productUnitId}" required>
+											<option th:each="item: ${listProductUnit}"
+												th:value="${item.productUnitId}"
+												th:selected="${productForm.productUnitId == item.productUnitId}"
+												th:text="${item.productUnitName}"></option>
+										</select>
+										<p th:if="${#fields.hasErrors('productUnitId')}"
+											th:errorclass="error" th:errors="*{productUnitId}" />
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="numberOfPeople" class="font-weight-bold">Khẩu
+											Phần (Số người dùng)</label> <input type="number"
+											name="numberOfPeople" class="form-control"
+											th:field="*{numberOfPeople}" th:value="*{numberOfPeople}"
+											id="numberOfPeople" min="1">
+										<p th:if="${#fields.hasErrors('numberOfPeople')}"
+											th:errorclass="error" th:errors="*{numberOfPeople}" />
+									</div>
+
+
+									<div class="form-group col-md-6">
+										<label for="price">Giá (VNĐ)</label> <input type="number"
+											name="price" class="form-control" th:field="*{price}"
+											th:value="*{price}" id="price" min="0" required>
+										<p th:if="${#fields.hasErrors('price')}" th:errorclass="error"
+											th:errors="*{price}" />
+									</div>
+								</div>
+
+
+
+
+								<div class="form-group">
+									<label for="description">Mô Tả</label>
+									<textarea class="form-control" id="description"
+										name="description" th:field="*{description}"
+										th:value="*{description}" rows="10"></textarea>
+									<p th:if="${#fields.hasErrors('description')}"
+										th:errorclass="error" th:errors="*{description}" />
+								</div>
+
+								<div class="form-group">
+									<label for="status">Trạng Thái</label> <select
+										class="form-control" name="status" id="status">
+										<option th:each="status:${listStatus}"
+											th:value="${status.getStatusId()}"
+											th:text="${status.getStatusName()}"></option>
+									</select>
+									<p th:if="${#fields.hasErrors('status')}" th:errorclass="error"
+										th:errors="*{status}" />
+								</div>
+
+								<div class="form-group" th:if="${#fields.hasErrors('global')}">
+									<p th:each="err : ${#fields.errors('global')}" th:text="${err}"
+										class="error" />
+								</div>
+
+
+								<div class="form-group">
+									<button type="button" class="btn btn-primary float-left"
+										onclick="window.location.href='/brand-admin/product/list'">Về
+										Danh Sách</button>
+									<p id="msg" class="ml-4 pt-1 float-left"></p>
+									<button type="submit" class="btn btn-primary mb-2 float-right"
+										id="addNew">Tạo Mới</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+		</div>
+	</div>
+
+	<script src="/ckfinder/static/samples/js/sf.js"></script>
+	<script src="/ckfinder/static/samples/js/tree-a.js"></script>
+	<script src="https://cdn.ckeditor.com/4.12.1/standard-all/ckeditor.js"></script>
+	<script src="/ckfinder/static/ckfinder.js"></script>
+	<script>
+		//Note: in this sample we use CKEditor with two extra plugins:
+		// - uploadimage to support pasting and dragging images,
+		// - image2 (instead of image) to provide images with captions.
+		// Additionally, the CSS style for the editing area has been slightly modified to provide responsive images during editing.
+		// All these modifications are not required by CKFinder, they just provide better user experience.
+		if (typeof CKEDITOR !== 'undefined') {
+			CKEDITOR.disableAutoInline = true;
+			CKEDITOR.addCss('img {max-width:100%; height: auto;}');
+			CKEDITOR.config.height = '600px';
+			var editor = CKEDITOR
+					.replace(
+							'description',
+							{
+								filebrowserBrowseUrl : '/ckfinder/static/ckfinder.html',
+								filebrowserImageBrowseUrl : '/ckfinder/static/ckfinder.html?type=Images',
+								filebrowserFlashBrowseUrl : '/ckfinder/static/ckfinder.html?type=Flash',
+								filebrowserUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Files',
+								filebrowserImageUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Images',
+								filebrowserFlashUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Flash'
+							});
+			CKFinder.setupCKEditor(editor);
+		} else {
+			document.getElementById('description').innerHTML = '<div class="tip-a tip-a-alert">This sample requires working Internet connection to load CKEditor 4 from CDN.</div>'
+		}
+	</script>
+</body>
+
+</html>

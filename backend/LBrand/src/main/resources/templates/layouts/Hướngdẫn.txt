@@ -1,0 +1,4 @@
+Folder này chủ yếu là lưu lại các layout để đem ra sử dụng.
+Khi muốn tạo một trang cho admin, ví dụ trang hiển thị danh sách sản phẩm. Thì copy code layout admin-layout.html
+bỏ vào trang danh sách sản phẩm đó.
+Sau đó code tiếp nội dung ở phần main content...chuyện là vậy.

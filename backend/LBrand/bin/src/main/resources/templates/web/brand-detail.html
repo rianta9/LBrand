@@ -1,0 +1,898 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<th:block th:replace="/fragments/web-fragments::web-head-fragment"></th:block>
+<title th:text="'LBrand - ' + ${brand.brandName}"></title>
+</head>
+<body data-spy="scroll" data-offset="10">
+
+	<div class="main-wrapper">
+
+		<header class="fl-header"
+			th:replace="/fragments/web-fragments::web-header-fragment">
+		</header>
+
+
+
+		<!-- MAIN CONTENT -->
+		<!-- breadcrumb-area start -->
+		<!-- <div class="breadcrumb-area section-ptb">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						breadcrumb-list start
+						<ul class="breadcrumb-list">
+							<li class="breadcrumb-item"><a href="index.html">Trang Chủ</a></li>
+							<li class="breadcrumb-item active">Thương Hiệu</li>
+						</ul>
+						breadcrumb-list end
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<!-- breadcrumb-area end -->
+
+
+		<!-- main-content-wrap start -->
+		<div class="container" style="background-color: #eee">
+			<div class="row mt-3">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb" style="background-color: #eee">
+						<li class="breadcrumb-item"><a th:href="@{/home}">Trang
+								Chủ</a></li>
+						<li class="breadcrumb-item active" aria-current="page"
+							th:text="${brand.brandName}"></li>
+
+					</ol>
+				</nav>
+			</div>
+
+		</div>
+
+		<div class="container" style="background-color: #eee">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="main-content p-3 mb-3" style="background-color: white">
+						<div class="product-details-images">
+							<div class="product_details_container">
+								<!-- product_big_images start -->
+								<div class="product_big_images-top">
+									<div class="portfolio-full-image tab-content">
+										<div th:object="${brand.listBrandImage[0]}" role="tabpanel"
+											class="tab-pane active product-image-position"
+											th:id="@{img-tab-} + *{imageId}">
+											<a th:href="@{/} + *{imageUrl}" class="img-poppu"
+												style="width: 100%"> <img class="rounded"
+												th:src="@{/} + *{imageUrl}" alt="#" height="480px"
+												width="100%"
+												style="object-fit: cover; object-position: center">
+											</a>
+										</div>
+										<th:block th:each="item, state :${brand.listBrandImage}">
+											<div th:if="${state.index != 0}" role="tabpanel"
+												class="tab-pane product-image-position"
+												th:id="@{img-tab-} + ${item.imageId}">
+												<a th:href="@{/} + ${item.imageUrl}" class="img-poppu"
+													style="width: 100%"> <img class="rounded"
+													th:src="@{/} + ${item.imageUrl}" alt="#" height="480px"
+													width="100%"
+													style="object-fit: cover; object-position: center">
+												</a>
+											</div>
+
+										</th:block>
+									</div>
+								</div>
+								<!-- product_big_images end -->
+
+								<!-- Start Small images -->
+								<ul
+									class="product_small_images-bottom horizantal-product-active nav"
+									role="tablist">
+									<li th:object="${brand.listBrandImage[0]}" role="presentation"
+										class="pot-small-img active"><a
+										th:href="@{#img-tab-} + *{imageId}" role="tab"
+										data-toggle="tab"> <img class="rounded"
+											th:src="@{/} + *{imageUrl}" alt="small-image" height="100px"
+											style="object-fit: cover; object-position: center">
+									</a></li>
+									<th:block th:each="item, state :${brand.listBrandImage}">
+										<li th:if="${state.index != 0}" role="presentation"
+											class="pot-small-img"><a
+											th:href="@{#img-tab-} + ${item.imageId}" role="tab"
+											data-toggle="tab"> <img class="rounded"
+												th:src="@{/} + ${item.imageUrl}" alt="small-image"
+												height="100px"
+												style="object-fit: cover; object-position: center">
+										</a></li>
+									</th:block>
+								</ul>
+								<!-- End Small images -->
+							</div>
+						</div>
+						<div class="product_details_info">
+							<h2 th:text="${brand.brandName}"></h2>
+
+							<!-- pro_rating start -->
+							<div class="pro_dtl_item">
+								<span class="font-weight-bold">Điểm: </span> <span
+									th:text="' ' + ${brand.getAveragePoint()}" class="review-point"></span>
+								<span
+									th:text="' (' + ${brand.getNumberOfReview()} + ')' + 'đánh giá'"></span>
+							</div>
+							<!-- pro_rating end -->
+
+							<!-- pro_dtl_prize start -->
+
+							<div class="pro_dtl_item">
+								<span class="font-weight-bold" th:text="'Địa chỉ: '"></span> <span
+									th:text="${brand.address}"></span>
+							</div>
+
+							<div class="pro_dtl_item">
+								<span class="font-weight-bold" th:text="'Số điện thoại: '"></span>
+								<span th:text="${brand.phone}"></span>
+							</div>
+
+							<div class="pro_dtl_item">
+								<span class="font-weight-bold" th:text="'Giờ mở cửa: '"></span>
+								<span th:text="${brand.openTime} + ' - ' + ${brand.closeTime}"></span>
+							</div>
+
+							<div class="pro_dtl_item">
+								<span class="font-weight-bold" th:text="'Loại hình: '"></span> <a
+									th:href="@{/search/brand?category=} + ${brand.serviceType.serviceTypeId}"
+									th:text="${brand.serviceType.serviceTypeName}"></a>
+							</div>
+
+							<div class="pro_dtl_item">
+								<span class="font-weight-bold" th:text="'Khoảng giá: '"></span>
+								<span
+									th:text="${brand.getMinProductPrice()} + ' - ' + ${brand.getMaxProductPrice()}"></span>
+							</div>
+
+							<!-- pro_dtl_prize end -->
+
+							<!-- product-quantity-action start -->
+							<!-- <div class="product-quantity-action">
+								<div class="prodict-statas">
+									<span>Số lượng :</span>
+								</div>
+								<div class="product-quantity">
+									<form action="#">
+										<div class="product-quantity">
+											<div class="cart-plus-minus">
+												<input value="1" type="number">
+											</div>
+										</div>
+									</form>
+								</div>
+							</div> -->
+							<!-- product-quantity-action end -->
+							<!-- pro_dtl_btn start -->
+							<ul class="pro_dtl_btn">
+								<li><a href="#" class="buy_now_btn">Đặt Bàn</a></li>
+								<li><th:block
+										th:if="${isFavourite == null || isFavourite == false}">
+										<a
+											th:href="@{/brand/} + ${brand.brandId} + @{/favourite/true}"><i
+											class="ion-heart"></i></a>
+									</th:block> <th:block th:if="${isFavourite == true}">
+										<a
+											th:href="@{/brand/} + ${brand.brandId} + @{/favourite/false}"><i
+											class="ion-heart" style="color: red"></i></a>
+									</th:block></li>
+							</ul>
+							<!-- pro_dtl_btn end -->
+							<!-- pro_social_share start -->
+							<div class="pro_social_share d-flex">
+								<h2 class="title_2">Share :</h2>
+								<ul class="pro_social_link">
+									<li><a href="#"><i class="ion-social-twitter"></i></a></li>
+									<li><a href="#"><i class="ion-social-tumblr"></i></a></li>
+									<li><a href="#"><i class="ion-social-facebook"></i></a></li>
+									<li><a href="#"><i
+											class="ion-social-instagram-outline"></i></a></li>
+								</ul>
+							</div>
+							<!-- pro_social_share end -->
+						</div>
+						<!-- product_details_info end -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<!-- product_details_info start -->
+					<div class="card mb-3">
+
+						<div class="card-body" id="#booking-form">
+							<h5 style="border-bottom: 2px solid #eee" align="center">Đặt
+								Bàn</h5>
+							<form action="#" method="POST">
+								<label class="font-weight-bold">Thời điểm</label>
+								<div class="input-group">
+
+									<input type="date" name="dateIn" id="dateIn"
+										class="input-group-btn custom-select"> <select
+										class="input-group-btn custom-select" name="timeIn"
+										id="timeIn">
+										<option value="06:00">01:00</option>
+										<option value="06:00">01:30</option>
+										<option value="06:00">02:00</option>
+										<option value="06:00">02:30</option>
+										<option value="06:00">03:00</option>
+										<option value="06:00">03:30</option>
+										<option value="06:00">04:00</option>
+										<option value="06:00">04:30</option>
+										<option value="06:00">05:00</option>
+										<option value="06:00">05:30</option>
+										<option value="06:00">06:00</option>
+										<option value="06:30">06:30</option>
+										<option value="07:00">07:00</option>
+										<option value="07:30">07:30</option>
+										<option value="08:00">08:00</option>
+										<option value="08:30">08:30</option>
+										<option value="09:00">09:00</option>
+										<option value="09:30">09:30</option>
+										<option value="10:00">10:00</option>
+										<option value="10:30">10:30</option>
+										<option value="11:00">11:00</option>
+										<option value="11:30">11:30</option>
+										<option value="12:00">12:00</option>
+										<option value="12:30">12:30</option>
+										<option value="13:00">13:00</option>
+										<option value="13:30">13:30</option>
+										<option value="14:00">14:00</option>
+										<option value="14:30">14:30</option>
+										<option value="15:00">15:00</option>
+										<option value="15:30">15:30</option>
+										<option value="16:00">16:00</option>
+										<option value="16:30">16:30</option>
+										<option value="17:00">17:00</option>
+										<option value="17:30">17:30</option>
+										<option value="18:00">18:00</option>
+										<option value="18:30">18:30</option>
+										<option value="19:00">19:00</option>
+										<option value="19:30">19:30</option>
+										<option value="20:00">20:00</option>
+										<option value="20:30">20:30</option>
+										<option value="21:00">21:00</option>
+										<option value="21:30">21:30</option>
+										<option value="22:00">22:00</option>
+										<option value="22:30">22:30</option>
+										<option value="23:00">23:00</option>
+										<option value="23:30">23:30</option>
+									</select>
+								</div>
+								<br> <label class="font-weight-bold">Số lượng</label>
+								<div class="input-group">
+
+									<select class="input-group-btn custom-select"
+										name="numberOfAdult" id="numberOfAdult">
+										<option value="1">1 Người Lớn</option>
+										<option value="1">2 Người Lớn</option>
+									</select> <select class="input-group-btn  custom-select"
+										name="numberOfChildren" id="numberOfChildren">
+										<option value="1">1 Trẻ Em</option>
+										<option value="1">2 Trẻ Em</option>
+									</select>
+								</div>
+
+								<br> <label class="font-weight-bold">Mã giảm giá</label>
+								<div class="input-group">
+									<select class="input-group-btn  custom-select"
+										name="discountCode" id="discountCode">
+										<option value="1">Giảm 5%</option>
+										<option value="1">Giảm 10% cho khách hàng mới</option>
+									</select>
+								</div>
+
+
+								<br> <label class="font-weight-bold">Ghi Chú</label>
+								<div class="input-group">
+									<textarea rows="3" name="note" id="note" style="width: 100%"></textarea>
+								</div>
+								<br> <br> <input type="button" value="Đặt Chỗ"
+									class="btn-dark w-100 pt-2 pb-2 rounded">
+							</form>
+						</div>
+					</div>
+					<!-- product_details_info end -->
+				</div>
+			</div>
+
+		</div>
+
+
+		<!-- Start Product Area -->
+		<div class="container mb-3" style="background-color: #eee">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="product-details-tab mt-30 p-3"
+						style="background-color: white">
+						<ul class="nav" role="tablist">
+							<li><a href="#listProduct" data-toggle="tab" role="tab"
+								aria-controls="listProduct" aria-selected="true" class="active">Sản
+									Phẩm</a></li>
+							<li><a href="#listService" data-toggle="tab" role="tab"
+								aria-controls="listService" aria-selected="false">Dịch Vụ</a></li>
+						</ul>
+						<div class="tab-content">
+
+							<!-- List Product -->
+							<div class="product_tab_content tab-pane active" id="listProduct">
+								<div class="row">
+
+									<div class="col-md-4 col-6"
+										th:each="item : ${brand.listProduct}">
+										<!-- single-product-wrap start -->
+										<div class="single-product-wrap">
+											<div class="product-image">
+												<a th:href="@{/product/} + ${item.productId}"><img
+													th:src="@{/} + ${item.avatar}" th:alt="${item.productName}"
+													height="190px"></a>
+												<th:block th:if="${item.differencePricePercent>=10}">
+													<span
+														th:text="@{- } + ${item.differencePricePercent} + @{%}"
+														class="label"></span>
+												</th:block>
+												<div class="product-action">
+													<a href="#" class="add-to-cart" data-toggle="tooltip"
+														data-placement="top" title="Lên thực đơn"><i
+														class="ion-android-checkbox-outline"></i></a> <a href="#"
+														class="wishlist" data-toggle="tooltip"
+														data-placement="top" title="Yêu thích"><i
+														class="ion-android-favorite-outline"></i></a> <a
+														th:href="@{/product/} + ${item.productId}"
+														class="quick-view" data-toggle="tooltip"
+														data-placement="top" title="Xem"><i class="far fa-eye"></i></a>
+												</div>
+											</div>
+											<div class="product-content">
+												<h3>
+													<a th:href="@{/product/} + ${item.productId}"
+														th:text="${item.productName}"></a>
+												</h3>
+												<div class="price-box">
+													<p th:text="${item.productType.productTypeName}"></p>
+													<p>
+														<span th:if="${item.differencePricePercent() > 0}"
+															th:text="${item.getStringPrice()}" class="old-price"></span>
+														<span th:text="${item.getStringSalePrice()}"
+															class="new-price"></span>
+													</p>
+												</div>
+											</div>
+										</div>
+										<!-- single-product-wrap end -->
+									</div>
+
+								</div>
+							</div>
+							<!-- End List Product -->
+
+							<!-- List Service -->
+							<div class="product_tab_content tab-pane" id="listService"
+								role="tabpanel">
+								<div class="row">
+
+									<div class="col-md-4 col-6"
+										th:each="item : ${brand.listService}">
+										<!-- single-product-wrap start -->
+										<div class="single-product-wrap">
+											<div class="product-image">
+												<a th:href="@{/service/} + ${item.serviceId}"><img
+													th:src="@{/} + ${item.avatar}" th:alt="${item.serviceName}"
+													height="190px"></a>
+												<th:block th:if="${item.differencePriceAdult()>=10}">
+													<span
+														th:text="@{- } + ${item.differencePriceAdult()} + @{%}"
+														class="label"></span>
+												</th:block>
+												<div class="product-action">
+													<a href="#" class="add-to-cart"><i
+														class="ion-android-checkbox-outline"></i></a> <a href="#"
+														class="wishlist"><i
+														class="ion-android-favorite-outline"></i></a> <a
+														th:href="@{/service/} + ${item.serviceId}"
+														class="quick-view"><i class="far fa-eye"></i></a>
+												</div>
+											</div>
+											<div class="product-content">
+												<h3>
+													<a th:href="@{/service/} + ${item.serviceId}"
+														th:text="${item.serviceName}"></a>
+												</h3>
+												<div class="price-box">
+													<a th:href="@{/brand/} + ${item.brand.brandId}"
+														th:text="${item.brand.brandName}"
+														style="line-height: 1.5; max-width: 100%"></a>
+													<p>
+														<span th:if="${item.differencePriceAdult() > 0}"
+															th:text="${item.getStringPriceForAdult()}"
+															class="old-price"></span> <span
+															th:text="${item.getStringSalePriceForAdult()}"
+															class="new-price"></span>
+													</p>
+												</div>
+											</div>
+										</div>
+										<!-- single-product-wrap end -->
+									</div>
+
+								</div>
+							</div>
+							<!-- End List Service -->
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Start Product End -->
+
+
+		<div class="container mb-3" style="background-color: #eee">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="main-content p-3" style="background-color: white">
+						<div class="product-details-tab mt-30">
+							<ul class="mb-50 nav" id="content-sticky">
+								<li class="active"><a href="#position">Bản Đồ</a></li>
+								<li><a href="#description">Mô Tả</a></li>
+
+								<li><a href="#reviews">Đánh Giá</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-8">
+					<div class="main-content p-3" style="background-color: white">
+						<!-- Start Single Content -->
+						<div class=" active" id="position">
+							<h5>Bản Đồ</h5>
+							<p th:text="'Địa chỉ: ' + ${brand?.address}"></p>
+
+							<th:block
+								th:if="${brand?.positionLat != null && brand?.positionLng != null}">
+								<script th:inline="javascript">
+      // In this example, we center the map, and add a marker, using a LatLng object
+      // literal instead of a google.maps.LatLng object. LatLng object literals are
+      // a convenient way to add a LatLng coordinate and, in most cases, can be used
+      // in place of a google.maps.LatLng object.
+      let map;
+
+      function initMap() {
+        const mapOptions = {
+          zoom: 15,
+          center: { lat: /*[[${brand.positionLat}]]*/ -34.397, lng: /*[[${brand.positionLng}]]*/ 150.644 },
+        };
+        map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        const marker = new google.maps.Marker({
+          // The below line is equivalent to writing:
+          // position: new google.maps.LatLng(-34.397, 150.644)
+          position: { lat: /*[[${brand.positionLat}]]*/ -34.397, lng: /*[[${brand.positionLng}]]*/ 150.644 },
+          map: map,
+        });
+        // You can use a LatLng literal in place of a google.maps.LatLng object when
+        // creating the Marker object. Once the Marker object is instantiated, its
+        // position will be available as a google.maps.LatLng object. In this case,
+        // we retrieve the marker's position using the
+        // google.maps.LatLng.getPosition() method.
+        const infowindow = new google.maps.InfoWindow({
+          content: "<p>Marker Location:" + marker.getPosition() + "</p>",
+        });
+        google.maps.event.addListener(marker, "click", () => {
+          infowindow.open(map, marker);
+        });
+      }
+    </script>
+							</th:block>
+
+							<div id="map" style="height: 500px"></div>
+							<script
+								src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9_Cc7uje6Lz9mc-kyTQQCTZSeI3V22pU&callback=initMap&libraries=&v=weekly"></script>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+		<div class="container mb-3" style="background-color: #eee">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="main-content p-3" style="background-color: white">
+						<div class="product_details_tab_content tab-content">
+							<!-- Start Single Content -->
+							<div class="product_tab_content tab-pane active" id="description"
+								role="tabpanel">
+								<div class="product_description_wrap">
+									<div>
+										<h5>Mô Tả</h5>
+										<div th:remove="tag" th:utext="${brand.info}"></div>
+									</div>
+
+								</div>
+							</div>
+							<!-- End Single Content -->
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="container mb-3" style="background-color: #eee">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="main-content p-3" style="background-color: white">
+						<!-- Start Single Content -->
+						<div id="reviews" role="tabpanel">
+							<!-- blog-details-wrapper -->
+							<div class="review_address_inner">
+								<h5>Đánh Giá</h5>
+								<!-- Single Review -->
+								<!-- Single Review -->
+								<th:block th:if="${brand.listBrandComment.size() == 0}">
+									<p>Chưa có đánh giá!</p>
+								</th:block>
+								<th:block th:each="review:${brand.listBrandComment}">
+									<div class="pro_review">
+										<div class="review_thumb">
+											<img alt="review images"
+												src="../../web/assets/images/other/review-02.jpg">
+										</div>
+										<div class="review_details">
+											<div class="review_info">
+												<h5>
+													<a href="#" th:text="${review.comment.account.fullName}"></a>
+												</h5>
+												<div class="rating_send">
+													<a th:href="@{#formComment} + ${review.comment.commentId}"
+														data-toggle="tab" role="tab">Phản hồi</a>
+												</div>
+											</div>
+											<div class="review_date">
+												<span
+													th:text="@{Ngày: } + ${review.comment.getStringDateCreated()}"></span>
+											</div>
+											<div class="review_date">
+												<span>Điểm đánh giá:</span> <span class="review-point"
+													th:text="${review.point}"></span>
+											</div>
+											<p th:text="${review.comment.commentContent}"></p>
+										</div>
+
+									</div>
+									<div class="pro_review_child"
+										th:each="childComment:${review.comment.listChildrenComment}">
+										<div class="review_thumb">
+											<img alt="review images"
+												src="../../web/assets/images/other/review-02.jpg">
+										</div>
+										<div class="review_details">
+											<div class="review_info">
+												<h5>
+													<a href="#" th:text="${childComment.account.fullName}"></a>
+												</h5>
+
+											</div>
+											<div class="review_date">
+												<span th:text="${childComment.getStringDateCreated()}"></span>
+											</div>
+											<p th:text="${childComment.commentContent}"></p>
+										</div>
+									</div>
+									<div class="tab-content">
+										<div class="pro_review_child tab-pane" role="tabpanel"
+											th:id="@{formComment} + ${review.comment.commentId}">
+											<form
+												th:action="@{/comment/parents/} + ${review.comment.commentId}"
+												method="POST">
+												<div class="form-group">
+													<div class="input-group mb-3">
+														<input type="text" class="form-control"
+															placeholder="Nhập nội dung bình luận"
+															aria-label="Nhập nội dung bình luận"
+															aria-describedby="basic-addon2" name="commentContent"
+															required="required">
+														<div class="input-group-append">
+															<button class="btn-dark pl-4 pr-4" type="submit">Gửi</button>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</th:block>
+								<!--// Single Review -->
+							</div>
+
+						</div>
+						<!--// blog-details-wrapper -->
+
+					</div>
+
+					<!-- End Single Content -->
+				</div>
+			</div>
+		</div>
+
+
+
+		<!-- Start Product Area -->
+		<div class="container mb-3" style="background-color: #eee">
+			<div class="row p-3">
+				<div class="col-lg-12 pb-3" style="background-color: white">
+					<div class="product-details-tab mt-30">
+						<ul class="nav" role="tablist">
+							<th:block sec:authorize="isAuthenticated()">
+								<li><a href="#recommendedservice" data-toggle="tab"
+									role="tab" aria-controls="recommendedservice"
+									aria-selected="true" class="active">Gợi Ý Cho Bạn</a></li>
+							</th:block>
+							<th:block sec:authorize="isAuthenticated()">
+								<li><a href="#topservice" data-toggle="tab" role="tab"
+									aria-controls="topservice" aria-selected="false">Thương Hiệu
+										Nổi Bật</a></li>
+							</th:block>
+							<th:block sec:authorize="isAnonymous()">
+								<li><a href="#topservice" data-toggle="tab" role="tab"
+									aria-controls="topservice" aria-selected="true" class="active">Thương Hiệu Nổi Bật</a></li>
+							</th:block>
+							<th:block sec:authorize="isAuthenticated()">
+								<li><a href="#viewedservice" data-toggle="tab" role="tab"
+									aria-controls="viewedservice" aria-selected="false">Thương Hiệu
+										Đã Xem</a></li>
+							</th:block>
+						</ul>
+						<div class="tab-content">
+
+							<th:block sec:authorize="isAuthenticated()">
+								<!-- Recommend Service -->
+								<div class="product_tab_content tab-pane active"
+									id="recommendedservice">
+									<div class="row product-active-lg-4">
+
+										<div class="col-lg-3"
+											th:each="item : ${listRecommendedService}">
+											<!-- single-product-wrap start -->
+											<div class="single-product-wrap">
+												<div class="product-image">
+													<a th:href="@{/service/} + ${item.serviceId}"><img
+														th:src="@{/} + ${item.avatar}"
+														th:alt="${item.serviceName}" height="190px"></a>
+													<th:block th:if="${item.differencePriceAdult()>=10}">
+														<span
+															th:text="@{- } + ${item.differencePriceAdult()} + @{%}"
+															class="label"></span>
+													</th:block>
+													<div class="product-action">
+														<a href="#" class="add-to-cart"><i
+															class="ion-android-checkbox-outline"></i></a> <a href="#"
+															class="wishlist"><i
+															class="ion-android-favorite-outline"></i></a> <a
+															th:href="@{/service/} + ${item.serviceId}"
+															class="quick-view"><i class="far fa-eye"></i></a>
+													</div>
+												</div>
+												<div class="product-content">
+													<h3>
+														<a th:href="@{/service/} + ${item.serviceId}"
+															th:text="${item.serviceName}"></a>
+													</h3>
+													<div class="price-box">
+														<a th:href="@{/brand/} + ${item.brand.brandId}"
+															th:text="${item.brand.brandName}"
+															style="line-height: 1.5; max-width: 100%"></a>
+														<p>
+															<span th:if="${item.differencePriceAdult() > 0}"
+																th:text="${item.getStringPriceForAdult()}"
+																class="old-price"></span> <span
+																th:text="${item.getStringSalePriceForAdult()}"
+																class="new-price"></span>
+														</p>
+													</div>
+												</div>
+											</div>
+											<!-- single-product-wrap end -->
+										</div>
+
+									</div>
+								</div>
+								<!-- END Recommends Service -->
+							</th:block>
+
+							<!-- Top Hot Brand -->
+							<th:block sec:authorize="isAuthenticated()">
+								<div class="product_tab_content tab-pane" id="topservice"
+									role="tabpanel">
+									<div class="row product-active-lg-4">
+
+										<div class="col-lg-3" th:each="item : ${topHotBrand}">
+											<!-- single-product-wrap start -->
+											<div class="single-product-wrap">
+												<div class="product-image">
+													<a th:href="@{/brand/} + ${item.brandId}"><img
+														th:src="@{/} + ${item.avatar}" th:alt="${item.brandName}"
+														height="190px"></a>
+													<div class="product-action">
+														<a href="#" class="add-to-cart"><i
+															class="ion-android-checkbox-outline"></i></a> <a href="#"
+															class="wishlist"><i
+															class="ion-android-favorite-outline"></i></a> <a
+															th:href="@{/brand/} + ${item.brandId}" class="quick-view"
+															data-toggle="modal" data-target="#exampleModalCenter"><i
+															class="far fa-eye"></i></a>
+													</div>
+												</div>
+												<div class="product-content">
+													<h3>
+														<a th:href="@{/brand/} + ${item.brandId}"
+															th:text="${item.brandName}"></a>
+													</h3>
+													<a
+														th:href="@{/search/brand?category=} + ${item.serviceType.serviceTypeId}"
+														th:text="${item.serviceType.serviceTypeName}"></a>
+												</div>
+											</div>
+											<!-- single-product-wrap end -->
+										</div>
+
+									</div>
+								</div>
+							</th:block>
+							<th:block sec:authorize="isAnonymous()">
+								<div class="product_tab_content tab-pane active" id="topservice"
+									role="tabpanel">
+									<div class="row product-active-lg-4">
+
+										<div class="col-lg-3 col-md-4"
+											th:each="item : ${topHotBrand}">
+											<!-- single-product-wrap start -->
+											<div class="single-product-wrap">
+												<div class="product-image">
+													<a th:href="@{/brand/} + ${item.brandId}"><img
+														th:src="@{/} + ${item.avatar}" th:alt="${item.brandName}"
+														height="190px"></a>
+													<div class="product-action">
+														<a href="#" class="add-to-cart"><i
+															class="ion-android-checkbox-outline"></i></a> <a href="#"
+															class="wishlist"><i
+															class="ion-android-favorite-outline"></i></a> <a
+															th:href="@{/brand/} + ${item.brandId}" class="quick-view"
+															data-toggle="modal" data-target="#exampleModalCenter"><i
+															class="far fa-eye"></i></a>
+													</div>
+												</div>
+												<div class="product-content">
+													<h3>
+														<a th:href="@{/brand/} + ${item.brandId}"
+															th:text="${item.brandName}"></a>
+													</h3>
+													<a
+														th:href="@{/search/brand?category=} + ${item.serviceType.serviceTypeId}"
+														th:text="${item.serviceType.serviceTypeName}"></a>
+												</div>
+											</div>
+											<!-- single-product-wrap end -->
+										</div>
+
+									</div>
+								</div>
+							</th:block>
+							<!-- End Top Hot Brand -->
+
+
+							<th:block sec:authorize="isAuthenticated()">
+								<!-- Viewed Service -->
+								<div class="product_tab_content tab-pane " id="viewedservice"
+									role="tabpanel">
+									<div class="row product-active-lg-4">
+
+										<div class="col-lg-3 col-md-4"
+											th:each="item: ${listViewedBrand}">
+											<!-- single-product-wrap start -->
+											<div class="single-product-wrap">
+												<div class="product-image">
+													<a th:href="@{/brand/} + ${item.brandId}"><img
+														th:src="@{/} + ${item.avatar}" th:alt="${item.brandName}"
+														height="190px"></a>
+													<div class="product-action">
+														<a href="#" class="add-to-cart"><i
+															class="ion-android-checkbox-outline"></i></a> <a href="#"
+															class="wishlist"><i
+															class="ion-android-favorite-outline"></i></a> <a
+															th:href="@{/brand/} + ${item.brandId}" class="quick-view"
+															data-toggle="modal" data-target="#exampleModalCenter"><i
+															class="far fa-eye"></i></a>
+													</div>
+												</div>
+												<div class="product-content">
+													<h3>
+														<a th:href="@{/brand/} + ${item.brandId}"
+															th:text="${item.brandName}"></a>
+													</h3>
+													<a
+														th:href="@{/search/brand?category=} + ${item.serviceType.serviceTypeId}"
+														th:text="${item.serviceType.serviceTypeName}"></a>
+												</div>
+											</div>
+											<!-- single-product-wrap end -->
+										</div>
+
+
+									</div>
+								</div>
+								<!-- End Viewed Service -->
+							</th:block>
+						</div>
+					</div>
+
+				</div>
+
+
+			</div>
+		</div>
+		<!-- Start Product End -->
+		<!-- main-content-wrap end -->
+		<!-- END MAIN CONTENT -->
+
+
+		<footer th:replace="/fragments/web-fragments::web-footer-fragment">
+
+		</footer>
+
+
+
+	</div>
+
+
+	<!-- JS
+============================================ -->
+
+
+
+
+	<!-- Modernizer JS -->
+	<script th:src="@{/web/assets/js/vendor/modernizr-3.6.0.min.js}"
+		src="../../web/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<!-- jQuery JS -->
+	<script th:src="@{/web/assets/js/vendor/jquery-3.3.1.min.js}"
+		src="../../web/assets/js/vendor/jquery-3.3.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script th:src="@{/web/assets/js/vendor/popper.min.js}"
+		src="../../web/assets/js/vendor/popper.min.js"></script>
+	<script th:src="@{/web/assets/js/vendor/bootstrap.min.js}"
+		src="../../web/assets/js/vendor/bootstrap.min.js"></script>
+
+	<!-- Slick Slider JS -->
+	<script th:src="@{/web/assets/js/plugins/slick.min.js}"
+		src="../../web/assets/js/plugins/slick.min.js"></script>
+	<!--  Jquery ui JS -->
+	<script th:src="@{/web/assets/js/plugins/jqueryui.min.js}"
+		src="../../web/assets/js/plugins/jqueryui.min.js"></script>
+	<!--  Scrollup JS -->
+	<script th:src="@{/web/assets/js/plugins/scrollup.min.js}"
+		src="../../web/assets/js/plugins/scrollup.min.js"></script>
+	<script th:src="@{/web/assets/js/plugins/ajax-contact.js}"
+		src="../../web/assets/js/plugins/ajax-contact.js"></script>
+
+	<!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+	<!--
+	<script src="../../web/assets/js/vendor/vendor.min.js"></script>
+	<script src="../../web/assets/js/plugins/plugins.min.js"></script>
+	-->
+
+	<!-- Main JS -->
+	<script th:src="@{/web/assets/js/main.js}"
+		src="../../web/assets/js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<th:block th:replace="/fragments/web-fragments::web-head-fragment"></th:block>
+<title>LBrand - Title</title>
+</head>
+
+<body>
+
+	<div class="main-wrapper">
+
+		<header class="fl-header"
+			th:replace="/fragments/web-fragments::web-header-fragment">
+
+		</header>
+
+
+
+		<!-- MAIN CONTENT -->
+		<h1>Viết nội dung trong phần main content này!</h1>
+		<!-- END MAIN CONTENT -->
+
+
+		<footer th:replace="/fragments/web-fragments::web-footer-fragment">
+
+		</footer>
+
+
+
+	</div>
+
+	<!-- JS
+============================================ -->
+
+	<!-- Modernizer JS -->
+	<script th:src="@{/web/assets/js/vendor/modernizr-3.6.0.min.js}"
+		src="../../web/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<!-- jQuery JS -->
+	<script th:src="@{/web/assets/js/vendor/jquery-3.3.1.min.js}"
+		src="../../web/assets/js/vendor/jquery-3.3.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script th:src="@{/web/assets/js/vendor/popper.min.js}"
+		src="../../web/assets/js/vendor/popper.min.js"></script>
+	<script th:src="@{/web/assets/js/vendor/bootstrap.min.js}"
+		src="../../web/assets/js/vendor/bootstrap.min.js"></script>
+
+	<!-- Slick Slider JS -->
+	<script th:src="@{/web/assets/js/plugins/slick.min.js}"
+		src="../../web/assets/js/plugins/slick.min.js"></script>
+	<!--  Jquery ui JS -->
+	<script th:src="@{/web/assets/js/plugins/jqueryui.min.js}"
+		src="../../web/assets/js/plugins/jqueryui.min.js"></script>
+	<!--  Scrollup JS -->
+	<script th:src="@{/web/assets/js/plugins/scrollup.min.js}"
+		src="../../web/assets/js/plugins/scrollup.min.js"></script>
+	<script th:src="@{/web/assets/js/plugins/ajax-contact.js}"
+		src="../../web/assets/js/plugins/ajax-contact.js"></script>
+
+	<!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+	<!--
+	<script src="../../web/assets/js/vendor/vendor.min.js"></script>
+	<script src="../../web/assets/js/plugins/plugins.min.js"></script>
+	-->
+
+	<!-- Main JS -->
+	<script th:src="@{/web/assets/js/main.js}"
+		src="../../web/assets/js/main.js"></script>
+
+</body>
+
+</html>

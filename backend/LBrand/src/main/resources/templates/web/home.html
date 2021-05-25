@@ -1,0 +1,340 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<th:block th:replace="/fragments/web-fragments::web-head-fragment"></th:block>
+<title>LBrand - Trang Chủ</title>
+</head>
+
+<body>
+
+	<div class="main-wrapper">
+
+		<header class="fl-header"
+			th:replace="/fragments/web-fragments::web-header-fragment">
+		</header>
+
+
+
+		<!-- Hero Section Start -->
+		<div class="hero-slider hero-slider-one container mt-4 pt-3 pb-3">
+
+			<!-- Single Slide Start -->
+			<div class="single-slide" th:each="item:${listBanner}"
+				th:style="'background-image: url(/' + ${item.imageUrl} + ')'">
+				<!-- Hero Content One Start -->
+				<div class="hero-content-one container"
+					style="background-color: transparent; background-size: cover; background-position: center;">
+					<div class="row">
+						<div class="col-lg-10 col-md-10">
+							<div class="slider-text-info p-4"
+								style="background: black; opacity: 0.8">
+								<h2 class="text-white">
+									<span th:text="${item.title}"></span>
+								</h2>
+								<p class="text-white" th:text="${item.description}">Món ăn sáng tạo và mang đậm dấu ấn
+									riêng của các đầu bếp tại Quán Mộc, nhưng vẫn hài hoà với hương
+									vị ẩm thực Việt truyền thống.</p>
+								<div class="hero-btn text-white mt-3">
+									<a th:href="${item.linkContent}" class="btn btn-light uppercase"><span>Xem
+											Ngay</span></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Hero Content One End -->
+			</div>
+			<!-- Single Slide End -->
+
+
+			
+
+
+		</div>
+		<!-- Hero Section End -->
+
+		<!-- Start Product Area -->
+		<div class="porduct-area section-pt section-pb-60">
+			<div class="container  pt-3 pb-3">
+				<div class="row">
+					<div class="col-lg-12">
+
+						<div class="section-title text-center">
+							<h2>
+								Thương Hiệu <span>Nổi Bật</span>
+							</h2>
+							<p>Cùng LBrand khám phá top Thương Hiệu nổi bật nhé.</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="row product-active-lg-4">
+
+					<div class="col-lg-3" th:each="brand : ${listTopBrand}">
+						<!-- single-product-wrap start -->
+						<div class="single-product-wrap">
+							<div class="product-image">
+								<a th:href="@{/brand/} + ${brand.brandId}"><img
+									th:src="@{/}+${brand.avatar}" alt="Produce Images"
+									height="190px"></a>
+								<div class="product-action">
+									<a href="#" class="add-to-cart"><i
+										class="ion-android-checkbox-outline"></i></a> <a href="#"
+										class="wishlist"><i class="ion-android-favorite-outline"></i></a>
+									<a th:href="@{/brand/} + ${brand.brandId}" class="quick-view"
+										data-toggle="modal" data-target="#exampleModalCenter"><i
+										class="far fa-eye"></i></a>
+								</div>
+							</div>
+							<div class="product-content">
+								<h3>
+									<a th:href="@{/brand/} + ${brand.brandId}"
+										th:text="${brand.brandName}"></a>
+								</h3>
+							</div>
+						</div>
+						<!-- single-product-wrap end -->
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- Start Product End -->
+
+		<!-- Banner Area Start -->
+		<div class="banner-area section-pb">
+			<div class="container  pt-3 pb-3">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="section-title text-center">
+							<h2>
+								<span>Khám</span> Phá
+							</h2>
+							<p>Khám phá những điều thú vị có tại Hệ thống đặt bàn trực
+								tuyến LBrand</p>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-6">
+						<!-- Single Banner Start -->
+						<div class="single-banner mt-30">
+							<img src="/image/brand/3.jpg" alt="" width="100%" height="280px">
+							<div class="banner-content text-center">
+								<div class="banner-content-box">
+									<h4>Chuỗi Thương Hiệu</h4>
+									<p>LBrand có hệ thống chuỗi thương hiệu trải rộng khắp tỉnh
+										thành phố Huế. Giúp khách hàng tìm kiếm nhanh chóng và thuận
+										tiện.</p>
+									<a href="/search/brand">Đặt Bàn Ngay</a>
+								</div>
+							</div>
+						</div>
+						<!-- Single Banner End -->
+					</div>
+
+					<div class="col-lg-4 col-md-6 pb-4">
+						<!-- Single Banner Start -->
+						<div class="single-banner mt-30">
+							<img src="/image/service/6.jpg" alt="" width="100%"
+								height="280px">
+							<div class="banner-content text-center">
+								<div class="banner-content-box">
+									<h4>Chuỗi Dịch Vụ</h4>
+									<p>LBrand cung cấp nhiều dịch vụ ăn uống mới lạ, độc đáo.
+										Giúp quý khách có nhiều trải nghiệm tại nhiều thương hiệu.</p>
+									<a href="/search/service">Đặt Bàn Ngay</a>
+								</div>
+							</div>
+						</div>
+						<!-- Single Banner End -->
+					</div>
+
+					<div class="col-lg-4 col-md-6">
+						<!-- Single Banner Start -->
+						<div class="single-banner mt-30">
+							<img src="/image/brand/2.jpg" alt="" width="100%" height="280px">
+							<div class="banner-content text-center">
+								<div class="banner-content-box">
+									<h4>Bảng Xếp Hạng</h4>
+									<p>LBrand xếp hạng, đánh giá chuỗi thương hiệu, dịch vụ
+										trong hệ thống. Giúp quý khách cập nhật được những nhà hàng
+										hot nhất hiện nay.</p>
+									<a href="shop.html">Đặt Bàn Ngay</a>
+								</div>
+							</div>
+						</div>
+						<!-- Single Banner End -->
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- Banner Area End -->
+
+		<!-- Start Product Area -->
+		<div class="porduct-area section-pb">
+			<div class="container  pt-3 pb-3">
+				<div class="row">
+					<div class="col-lg-12">
+
+						<div class="section-title text-center">
+							<h2>
+								Dịch Vụ <span>Ưu Đãi Hot</span>
+							</h2>
+						</div>
+					</div>
+				</div>
+
+				<div class="row product-two-row-4">
+
+					<div class="col-lg-12" th:each="service : ${listServiceInSale}">
+						<!-- single-product-wrap start -->
+						<div class="single-product-wrap">
+							<div class="product-image">
+								<a th:href="@{/service/} + ${service.serviceId}"><img
+									th:src="@{/} + ${service.avatar}" alt="Produce Images"
+									height="190px"></a> <span class="label"
+									th:text="@{- } + ${service.differencePriceAdult()} + @{%}">30%
+									Off</span>
+								<div class="product-action">
+									<a href="#" class="add-to-cart"><i
+										class="ion-android-checkbox-outline"></i></a> <a href="#"
+										class="wishlist"><i class="ion-android-favorite-outline"></i></a>
+									<a th:href="@{/service/} + ${service.serviceId}"
+										class="quick-view" data-toggle="modal"
+										data-target="#exampleModalCenter"><i class="far fa-eye"></i></a>
+								</div>
+							</div>
+							<div class="product-content">
+								<h3>
+									<a th:href="@{/service/} + ${service.serviceId}"
+										th:text="${service.serviceName}">Product Title</a>
+								</h3>
+								<div class="price-box">
+									<a th:href="@{/brand/} + ${service.brand.brandId}"
+										th:text="${service.brand.brandName}"
+										style="line-height: 1.5; max-width: 100%"></a> <br> <span
+										class="old-price"
+										th:text="${service.getStringPriceForAdult()}"></span> <span
+										class="new-price"
+										th:text="${service.getStringSalePriceForAdult()}"></span>
+								</div>
+							</div>
+						</div>
+						<!-- single-product-wrap end -->
+					</div>
+
+
+				</div>
+				<div class="row mt-4">
+					<div class="col-lg-12">
+
+						<div class="section-title text-center">
+							<a href="/search?type=service&orderBy=sale" class="btn-dark rounded p-2 pl-3 pr-3">Xem
+								Tất Cả</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Start Product End -->
+
+
+		<!-- testimonial-area start -->
+		<!-- <div
+			class="testimonial-area testimonial-bg bg-gray overly-image section-ptb"
+			style="background: url('/image/banner/large0.jpg')">
+			<div class="container" style="background-color: transparent;">
+				<div class="row">
+					<div class="col-lg-8 offset-md-2 col-md-8 col-sm-12">
+						<div class="testimonial-slider">
+							<div class="testimonial-inner text-center">
+								<div class="test-cont">
+									<img src="/web/assets/images/icon/quite.png" alt="">
+									<p>Tôi thường xuyên phải đi công tác để thu thập số liệu vì
+										đặc thù công việc. Nhờ LBrand, tôi có thể đến những nhà hàng
+										sang trọng, nơi vui chơi giải trí mà không lo việc phải trả
+										những chi phí đắt đỏ.</p>
+								</div>
+								<div class="test-author ">
+									<h5>CEO Janue - LuxB</h5>
+								</div>
+							</div>
+							<div class="testimonial-inner text-center">
+								<div class="test-cont">
+									<img src="/web/assets/images/icon/quite.png" alt="">
+									<p>There are many variations of passages of Lorem Ipsum
+										available, but the majority have suffered alteration in some
+										form. There are many variations of passages.</p>
+								</div>
+								<div class="test-author ">
+									<h5>Michelle Mitchell</h5>
+								</div>
+							</div>
+							<div class="testimonial-inner text-center">
+								<div class="test-cont">
+									<img src="/web/assets/images/icon/quite.png" alt="">
+									<p>There are many variations of passages of Lorem Ipsum
+										available, but the majority have suffered alteration in some
+										form. There are many variations of passages.</p>
+								</div>
+								<div class="test-author">
+									<h5>Max Mitchell</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<!-- testimonial-area end -->
+
+
+		<footer th:replace="/fragments/web-fragments::web-footer-fragment">
+
+		</footer>
+
+
+
+	</div>
+
+	<!-- JS
+============================================ -->
+
+	<!-- Modernizer JS -->
+	<script th:src="@{/web/assets/js/vendor/modernizr-3.6.0.min.js}"
+		src="../../web/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<!-- jQuery JS -->
+	<script th:src="@{/web/assets/js/vendor/jquery-3.3.1.min.js}"
+		src="../../web/assets/js/vendor/jquery-3.3.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script th:src="@{/web/assets/js/vendor/popper.min.js}"
+		src="../../web/assets/js/vendor/popper.min.js"></script>
+	<script th:src="@{/web/assets/js/vendor/bootstrap.min.js}"
+		src="../../web/assets/js/vendor/bootstrap.min.js"></script>
+
+	<!-- Slick Slider JS -->
+	<script th:src="@{/web/assets/js/plugins/slick.min.js}"
+		src="../../web/assets/js/plugins/slick.min.js"></script>
+	<!--  Jquery ui JS -->
+	<script th:src="@{/web/assets/js/plugins/jqueryui.min.js}"
+		src="../../web/assets/js/plugins/jqueryui.min.js"></script>
+	<!--  Scrollup JS -->
+	<script th:src="@{/web/assets/js/plugins/scrollup.min.js}"
+		src="../../web/assets/js/plugins/scrollup.min.js"></script>
+	<script th:src="@{/web/assets/js/plugins/ajax-contact.js}"
+		src="../../web/assets/js/plugins/ajax-contact.js"></script>
+
+	<!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+	<!--
+<script src="../../web/assets/js/vendor/vendor.min.js"></script>
+<script src="../../web/assets/js/plugins/plugins.min.js"></script>
+-->
+
+	<!-- Main JS -->
+	<script th:src="@{/web/assets/js/main.js}"
+		src="../../web/assets/js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head>
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Admin - Quản Lý Thương Hiệu</title>
+</head>
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/admin-menu::admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-12">
+							<ol class="breadcrumb mb-4">
+								<li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+								<li class="breadcrumb-item active">Sửa thông tin thương
+									hiệu</li>
+							</ol>
+							<div class="card mb-4 px-4 py-3">
+								<form th:method="POST" th:object="${brand}"
+									th:action="@{/admin/brand/} +${brand.brandId}+ @{/delete}" >
+									<div class="row text-center">
+										<div class="col-md-12">
+											<div class="form-group">
+												<img id="previewImage" th:src="@{/} + *{avatar}"
+													class="img-preview">
+											</div>
+											<div class="form-group">
+												<label for="fileImage" class="btn btn-primary">Ảnh đại
+													diện</label> <input type="file" th:field="*{fileImage}" id="fileImage"
+													class="img-circle profile-avatar" name="fileImage"
+													style="visibility: hidden; width: 12px"
+													accept="image/png, image/jpeg"
+													th:onchange="previewImageBefore(event)" disabled="disabled" />
+											</div>
+
+											<!-- <input type="file"
+												th:field="*{avatar}" class="file-uploader" name="Photo"
+												id="Photo"> -->
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Tên thương hiệu:</label> <input type="text"
+													th:field="*{brandName}" class="form-control"
+													th:value="${brand.brandName}" name="brandName"
+													id="brandName"  disabled="disabled">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Ngày tạo:</label> <input type="text"
+													th:field="*{dateCreated}" class="form-control"
+													th:value="${brand.dateCreated}"
+													name="dateCreated" id="dateCreated"  disabled="disabled">
+											</div>
+										</div>
+										
+									</div>
+									<div class="row">
+									<div class="col-md-6">
+											<div class="form-group">
+												<label>Giờ mở cửa:</label> <input type="text"
+													class="form-control" th:field="*{openTime}"
+													th:value="${brand.openTime}" name="openTime" id="username"  disabled="disabled">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Giờ đóng cửa:</label> <input type="text"
+													th:field="*{closeTime}" class="form-control"
+													th:value="*{closeTime}" name="closeTime" id="closeTime"  disabled="disabled">
+											</div>
+										</div>
+										
+									</div>
+
+									<div class="row">
+									<div class="col-md-6">
+											<div class="form-group">
+												<label>Địa chỉ</label> <input type="text"
+													th:field="*{address}" class="form-control" name="address"
+													th:value="*{address}" id="Address"  disabled="disabled">
+											</div>
+										</div>
+										
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Loại hình dịch vụ:</label> <select name="serviceTypeId"
+													th:field="*{serviceTypeId}" class="form-control" id="serviceTypeId" disabled="disabled">
+													<th:block th:each="item:${listSeviceType}">
+														<option
+															th:if="${item.serviceTypeId} == ${brand.serviceTypeId}"
+															th:value="${item.serviceTypeId}"
+															th:text="${item.serviceTypeName}" selected></option>
+														<option
+															th:unless="${item.serviceTypeId} == ${brand.serviceTypeId}"
+															th:value="${item.serviceTypeId}"
+															th:text="${item.serviceTypeName}"></option>
+													</th:block>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Điện thoại</label> <input type="number"
+													th:field="*{phone}" class="form-control"
+													th:value="*{phone}" name="phone" id="Phone"  disabled="disabled">
+												<th:block th:if="${phoneerror}">
+													<div class="toast" role="alert" aria-live="assertive"
+														aria-atomic="true" data-autohide="true" data-delay="6000">
+														<div class="toast-body text-danger"
+															th:text="${phoneerror}"></div>
+														<button type="button"
+															class="ml-2 mb-1 close position-relative"
+															data-dismiss="toast" aria-label="Close">
+															<span aria-hidden="true"
+																class="position-absolute btn_close">&times;</span>
+														</button>
+													</div>
+												</th:block>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Tel</label> <input type="number"
+													th:field="*{tel}" class="form-control"
+													th:value="*{tel}" name="Tel" id="Tel"  disabled="disabled">
+												<th:block th:if="${telerror}">
+													<div class="toast" role="alert" aria-live="assertive"
+														aria-atomic="true" data-autohide="true" data-delay="6000">
+														<div class="toast-body text-danger"
+															th:text="${telerror}"></div>
+														<button type="button"
+															class="ml-2 mb-1 close position-relative"
+															data-dismiss="toast" aria-label="Close">
+															<span aria-hidden="true"
+																class="position-absolute btn_close">&times;</span>
+														</button>
+													</div>
+												</th:block>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Trạng thái</label><select name="status"
+													th:field="*{status}" class="form-control">
+													<th:block th:if="${brand.status} ==1">
+														<option th:value="${brand.status}" selected>Hoạt
+															động</option>
+														<option th:value="0">Khóa</option>
+													</th:block>
+													<th:block th:unless="${brand.status} ==1">
+														<option th:value="${brand.status}" selected>Khóa</option>
+														<option th:value="1">Hoạt động</option>
+													</th:block>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<a th:href="@{/admin/account/list}"
+												class="btn btn-outline-dark"> Về danh sách </a>
+										</div>
+										<div class="col-md-6 text-right">
+											<button type="submit" class="btn btn-outline-success">Cập
+												nhật</button>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+		</div>
+	</div>
+</body>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/admin/dist/js/scripts.js/>"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+	crossorigin="anonymous"></script>
+<script src="/admin/dist/assets/demo/chart-area-demo.js/>"></script>
+<script src="/admin/dist/assets/demo/chart-bar-demo.js/>"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="/admin/dist/assets/demo/datatables-demo.js/>"></script>
+<!-- <script src="/admin/js/brand-img.js"></script> -->
+<script type="text/javascript">
+	$("#avatar").change(function() {
+		filename = this.files[0].name
+		console.log(filename);
+	});
+</script>
+
+</html>

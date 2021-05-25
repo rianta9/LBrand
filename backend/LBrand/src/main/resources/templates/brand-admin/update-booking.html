@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head>
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Brand Admin - Cập Nhật Đơn Đặt Bàn</title>
+</head>
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/brand-admin-menu::brand-admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<th:block th:if="${notification}" )>
+						<div class="toast toast-absolute" role="alert"
+							aria-live="assertive" aria-atomic="true" data-delay="5000">
+							<div class="toast-header">
+								<strong class="mr-auto">Thông báo</strong>
+								<button type="button" class="ml-2 mb-1 close"
+									data-dismiss="toast" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="toast-body" th:text="${notification}"></div>
+						</div>
+					</th:block>
+					<ol class="breadcrumb mb-4">
+						<li class="breadcrumb-item"><a href="/brand-admin/home">Dashboard</a></li>
+						<li class="breadcrumb-item"><a
+							href="/brand-admin/product/list">Quản Lý Sản Phẩm</a></li>
+						<li class="breadcrumb-item active">Chỉnh Sửa Sản Phẩm</li>
+					</ol>
+
+
+					<div class="card">
+						<div class="card-body">
+							<div class="card-title">
+								<h5
+									th:text="'Đơn Đặt Bàn: #' + ${booking.getStringId} + ' - ' + ${booking.bookingStatus.bookingStatusName}"
+									class="font-weight-normal"></h5>
+							</div>
+
+							<div class="row pb-4 mb-4">
+								<div class="col-md-4  mb-4 mt-4">
+									<p class="font-weight-bold">Thông Tin Người Dùng</p>
+									<div class="card h-100">
+										<div class="card-body">
+											<ul>
+												<li th:text="'Liên lạc: ' + ${booking.contactInfo}"></li>
+												<li
+													th:text="'Ghi chú: ' + ${booking.note != null ? booking.note:''}"></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 mb-4 mt-4">
+									<p class="font-weight-bold">Thông Tin Đặt Bàn</p>
+									<div class="card h-100">
+										<div class="card-body">
+											<ul>
+												<li
+													th:text="'Hình thức đặt bàn: ' + ${booking.getBookingType}"></li>
+												<li
+													th:text="'Ngày đặt bàn: ' + ${booking.getStringDateCreated}"></li>
+												<li
+													th:text="'Thời điểm đến: ' + ${booking.getStringTimeIn} + ' ' + ${booking.getStringDateIn}"></li>
+												<li th:text="'Số người lớn: ' + ${booking.numberOfAdults}"></li>
+												<li th:text="'Số trẻ em: ' + ${booking.numberOfChildren}"></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 mb-4 mt-4">
+									<p class="font-weight-bold">Thông Tin Thanh Toán</p>
+									<div class="card h-100">
+										<div class="card-body">
+											<ul>
+												<li
+													th:text="'Số tiền đặt cọc: ' + ${booking.getStringDeposit}"></li>
+												<li
+													th:text="'Hình thức thanh toán: ' + ${booking.paymentMethod.paymentMethodName}"></li>
+												<li th:if="${booking.needPayment}"></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<th:block th:if="${booking?.listBookingServiceDetail?.size != 0}">
+								<p class="font-weight-bold">Chi Tiết Dịch Vụ</p>
+								<div class="table-responsive mb-4">
+									<table class="table">
+										<thead>
+											<tr>
+												<th colspan="2">Dịch Vụ</th>
+												<th>Giá Người Lớn</th>
+												<th>Giá Trẻ Em</th>
+												<th>Tổng Tiền</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="item:${booking.listBookingServiceDetail}">
+												<td class="align-middle" width="125"><img alt=""
+													th:src="@{/} + ${item.service?.avatar}" width="120px"
+													height="80px"></td>
+												<td><a
+													th:href="@{/service/} + ${item.service?.serviceId}"
+													th:text="${item.service?.serviceName}"></a></td>
+												<td
+													th:text="${booking.numberOfAdults} + ' ngườix' + ${item.getStringSalePriceForAdult}">200.000
+													VNĐ</td>
+												<td
+													th:text="${booking.numberOfChildren} + ' ngườix' + ${item.getStringSalePriceForChildren}">100.000
+													VNĐ</td>
+												<td th:text=${booking.getStringTotalPriceOfService}>1.000.000
+													VNĐ</td>
+											</tr>
+
+										</tbody>
+									</table>
+								</div>
+							</th:block>
+							<th:block th:if="${booking?.listBookingProductDetail?.size != 0}">
+								<p class="font-weight-bold">Danh Sách Sản Phẩm</p>
+								<div class="table-responsive mb-4">
+									<table class="table">
+										<thead>
+											<tr>
+												<th colspan="2">Sản Phẩm</th>
+												<th>Giá</th>
+												<th>Số Lượng</th>
+												<th>Tổng Tiền</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="item:${booking.listBookingProductDetail}">
+												<td class="align-middle" width="125"><img alt=""
+													th:src="@{/} + ${item.product.avatar}" width="120px"
+													height="80px"></td>
+												<td><a
+													th:href="@{/product/} + ${item.product.productId}"
+													th:text="${item.product.productName}"></a></td>
+												<td th:text="${item.getStringSalePrice}">100.000 VNĐ</td>
+												<td th:text="${item.quantity}">10</td>
+												<td th:text=${item.getStringTotalPrice}>1.000.000 VNĐ</td>
+											</tr>
+
+										</tbody>
+									</table>
+								</div>
+							</th:block>
+
+							<table class="ml-auto mr-1 total-price-table">
+								<thead>
+									<tr>
+										<th style="min-width: 150px"></th>
+										<th style="min-width: 150px"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Tạm tính</td>
+										<td th:text="${booking.getStringTotalPriceWithoutDiscount}"></td>
+									</tr>
+									<tr>
+										<td>Giảm giá</td>
+										<td th:text="${booking.getStringDiscountMoney}"></td>
+									</tr>
+									<tr>
+										<td>Tổng</td>
+										<td th:text="${booking.getStringTotalPrice}"></td>
+									</tr>
+
+								</tbody>
+							</table>
+
+							<form
+								th:action="@{/brand-admin/booking/} + ${booking.bookingId}+'/edit'"
+								th:method="POST">
+								<div class="form-group mt-4">
+									<label>Trạng thái đặt bàn</label> <select class="form-control"
+										id="bookingStatusId" name="bookingStatusId">
+										<option th:each="item:${listBookingStatus}"
+											th:value="${item.bookingStatusId}"
+											th:text="${item.bookingStatusName}"
+											th:selected="${item.bookingStatusId == booking.bookingStatus.bookingStatusId}">
+									</select>
+								</div>
+								<div class="form-group">
+									<button type="button" class="btn btn-outline-dark float-left"
+										onclick="window.location.href='/brand-admin/booking/list'">Về
+										Danh Sách</button>
+									<p id="msg" class="ml-4 pt-1 float-left"></p>
+									<button type="submit"
+										class="btn btn-outline-success mb-2 float-right"
+										id="updateProduct">Cập Nhật</button>
+								</div>
+							</form>
+						</div>
+
+
+
+
+					</div>
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+		</div>
+	</div>
+</body>
+
+</html>

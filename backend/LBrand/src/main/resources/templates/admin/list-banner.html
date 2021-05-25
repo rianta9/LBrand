@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head >
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Admin - Quản Lý Danh Sách Banner</title>
+</head>
+
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/admin-menu::admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-12">
+							<ol class="breadcrumb mb-4">
+								<li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+								<li class="breadcrumb-item active">Quản Lý Danh Sách Banner</li>
+							</ol>
+
+							<div class="card mb-4">
+								<div class="card-header">
+									<i class="fas fa-table mr-1"></i> DataTable
+								</div>
+								<div class="card-body">
+									<a href="/admin/product-category/new" class="btn btn-success mb-3">Thêm
+										Banner</a>
+									<div class="table-responsive">
+										<table class="table table-bordered" style="table-layout: fixed;" id="dataTable">
+											<thead>
+												<tr>
+													<th width="30">ID</th>
+													<th width="133">Ảnh</th>
+													<th width="100">Thương Hiệu</th>
+													<th width="120">Tiêu Đề</th>
+													<th width="240">Mô Tả</th>
+													<th width="100">Link</th>
+													<th width="80">Ngày Tạo</th>
+													<th width="80">Ngày Bắt Đầu</th>
+													<th width="80">Ngày Kết Thúc</th>
+													<th width="50">Trạng Thái</th>
+													<th width="80">Action</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th>ID</th>
+													<th>Ảnh</th>
+													<th>Thương Hiệu</th>
+													<th>Tiêu Đề</th>
+													<th style="width: 220px !important">Mô Tả</th>
+													<th>Link</th>
+													<th>Ngày Tạo</th>
+													<th>Ngày Bắt Đầu</th>
+													<th>Ngày Kết Thúc</th>
+													<th>Trạng Thái</th>
+													<th>Action</th>
+												</tr>
+											</tfoot>
+											<tbody id="data">
+												<!-- Insert data with this type -->
+												<tr th:each="item: ${listBanner}">
+													<td th:text="${item.bannerId}">1</td>
+													<td class="align-middle"><img alt=""
+														th:src="@{/} + ${item.imageUrl}" width="150px" height="100px"></td>
+													<td th:text="${item.brand.brandName}">San Fu Lo</td>
+													<td th:text="${item.title}">San Fu Lo jj đó</td>
+													<td th:text="${item.description}" width="220" style="width: 220px !important">mô tả</td>
+													<td th:text="${item.linkContent}">buffet</td>
+													<td th:text="${item.getStringDateCreated}">20/01/2021</td>
+													<td th:text="${item.getStringDateBegin}">20/01/2021</td>
+													<td th:text="${item.getStringDateEnd}">20/01/2021</td>
+													<td th:text="${item.getStatus}">Đã kết thúc</td>
+													<td>
+														<div class="btn-group">
+															<a class="btn btn-outline-success btn-sm"
+																th:href="@{/admin/banner/} + ${item.bannerId} + @{/edit}">Sửa</a>
+															<a class="btn btn-outline-danger btn-sm"
+																th:href="@{/admin/banner/} + ${item.bannerId} + @{/delete}">Xoá</a>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+		</div>
+	</div>
+</body>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/admin/dist/js/scripts.js/>"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+	crossorigin="anonymous"></script>
+<script src="/admin/dist/assets/demo/chart-area-demo.js/>"></script>
+<script src="/admin/dist/assets/demo/chart-bar-demo.js/>"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="/admin/dist/assets/demo/datatables-demo.js/>"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#dataTable').DataTable();
+	});
+</script>
+</html>

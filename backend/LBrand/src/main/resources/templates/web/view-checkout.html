@@ -1,0 +1,393 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	lang="vi">
+<head>
+<th:block th:replace="/fragments/web-fragments::web-head-fragment"></th:block>
+<title>LBrand - Xác Nhận Đặt Bàn</title>
+
+</head>
+
+<body>
+
+	<div class="main-wrapper">
+
+		<header class="fl-header"
+			th:replace="/fragments/web-fragments::web-header-fragment">
+
+		</header>
+
+
+
+		<!-- MAIN CONTENT -->
+		<!-- breadcrumb-area start -->
+		<div class="container" style="background-color: #eee">
+			<div class="row mt-3">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb" style="background-color: #eee">
+						<li class="breadcrumb-item"><a th:href="@{/home}">Trang
+								Chủ</a></li>
+						<li class="breadcrumb-item" aria-current="page">Xác Nhận Đặt
+							Bàn</li>
+						<li class="breadcrumb-item active"><a
+							th:href="@{/brand/} + ${bookingForm.brandId}"
+							th:text="${bookingForm.brandName}"></a></li>
+
+					</ol>
+				</nav>
+			</div>
+
+		</div>
+		<!-- breadcrumb-area end -->
+
+		<!-- main-content-wrap start -->
+		<div class="main-content-wrap my-account-page">
+			<div class="container mb-3" style="background-color: #eee">
+				<div class="account-dashboard w-100">
+
+					<form
+						th:action="@{/checkout/brand/} + ${bookingForm.brandId} + @{/payment}"
+						th:object="${checkoutForm}" th:method="POST">
+						<div class="row">
+
+							<div class="col-md-12 col-lg-9 mb-3">
+								<!-- Tab panes -->
+								<div class="dashboard-content" style="background-color: white">
+
+									<div>
+
+
+										<div class="row mb-4">
+											<div class="col-md-6 mb-4">
+
+												<div class="card h-100"
+													th:style="'background: url(' + @{/} + ${bookingForm.avatar} + '); background-repeat: no-repeat; background-size: cover; background-position: center;'">
+
+													<div class="card-body"
+														style="background: black; opacity: 0.7; color: white;">
+														<div class="card-title">
+															<p class="font-weight-bold" align="center">Thông Tin
+																Chung</p>
+														</div>
+														<div class="form-group">
+															<label class="font-weight-bold">Đặt bàn tại:</label> <a
+																th:href="@{/brand/} + ${bookingForm.brandId}"
+																th:text="${bookingForm.brandName}"
+																class="font-weight-bold pink"></a>
+														</div>
+														<div class="form-group">
+															<label for="customer" class="font-weight-bold">Khách
+																hàng</label> <br> <input
+																class="form-control font-weight-bold w-100 input-dark-opacity"
+																id="customer" name="customer" th:field="*{customer}"
+																th:value="${bookingForm.customer}" required>
+															<p th:if="${#fields.hasErrors('customer')}"
+																th:errorclass="error" th:errors="*{customer}" />
+
+														</div>
+														<div class="form-group">
+															<label for="contactPhone" class="font-weight-bold">Số
+																điện thoại</label> <br> <input
+																class="form-control font-weight-bold w-100 input-dark-opacity"
+																id="contactPhone" name="contactPhone"
+																th:field="*{contactPhone}"
+																th:value="${bookingForm.contactPhone}" minlength="10"
+																maxlength="11" required>
+															<p th:if="${#fields.hasErrors('contactPhone')}"
+																th:errorclass="error" th:errors="*{contactPhone}" />
+
+														</div>
+														<div class="form-group">
+															<label for="note" class="font-weight-bold">Ghi
+																chú</label><br>
+															<textarea
+																class="form-control font-weight-bold w-100 input-dark-opacity"
+																rows="4" id="note" name="note" th:field="*{note}"
+																th:value="${bookingForm.note}"></textarea>
+															<p th:if="${#fields.hasErrors('note')}"
+																th:errorclass="error" th:errors="*{note}" />
+														</div>
+														<!-- <button class="btn btn-dark w-100" type="submit"
+															id="updateInfo">Cập Nhật</button> -->
+													</div>
+												</div>
+
+											</div>
+											<div class="col-md-6 mb-4">
+
+												<div class="card h-100">
+
+													<div class="card-body">
+														<div class="card-title">
+															<p class="font-weight-bold" align="center">Thông Tin
+																Đặt Bàn</p>
+														</div>
+														<!-- <label class="font-weight-bold">Hình thức đặt bàn</label>
+														<p th:text="${bookingForm.getBookingType}"></p>-->
+
+														<div class="cart-content">
+															<label class="font-weight-bold">Ngày đến</label>
+															<p
+																th:text="${bookingForm.timeIn} + ' ' + ${bookingForm.getStringDateIn}"></p>
+															<label class="font-weight-bold">vị trí</label>
+															<p th:text="'Tầng ' + ${bookingForm.floor}"></p>
+															<label class="font-weight-bold">Số người</label>
+															<p
+																th:text="${bookingForm.numberOfAdult} + ' người lớn' + ' + ' + ${bookingForm.numberOfChildren} + ' trẻ em'"></p>
+
+
+														</div>
+														<div class="card-content mt-4">
+															<label class="font-weight-bold mb-3">Mã giảm giá</label>
+															<div class="input-group">
+																<input type="text" class="form-control"
+																	placeholder="Nhập mã giảm giá"
+																	aria-label="Nhập mã giảm giá" id="discountCode"
+																	name="discountCode"
+																	th:change="|applyDiscountCode(${brandId})|">
+																<div class="input-group-append">
+																	<button class="btn btn-outline-dark" type="button"
+																		th:onclick="|applyDiscountCode(${brandId})|">Áp
+																		dụng</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+
+
+
+										<!-- Đặt Bàn Dịch Vụ -->
+
+										<th:block th:if="${bookingServiceDetail}">
+											<p class="font-weight-bold">Dịch Vụ Đã Chọn</p>
+											<div class="table-responsive mb-4">
+												<table class="table">
+													<thead>
+														<tr>
+															<th colspan="2">Dịch Vụ</th>
+															<th>Giá Người Lớn</th>
+															<th>Giá Trẻ Em</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:object="${bookingServiceDetail}">
+															<td class="align-middle" width="125"><img alt=""
+																th:src="@{/} + *{avatar}" width="120px" height="80px"></td>
+															<td><a th:href="@{/service/} + *{serviceId}"
+																th:text="*{serviceName}"></a></td>
+															<td
+																th:text="${bookingForm.numberOfAdult} + ' ngườix' + ${bookingServiceDetail.getStringSalePriceForAdult}">200.000
+																VNĐ</td>
+															<td
+																th:text="${bookingForm.numberOfChildren} + ' ngườix' + ${bookingServiceDetail.getStringSalePriceForChildren}">100.000
+																VNĐ</td>
+
+														</tr>
+
+													</tbody>
+												</table>
+											</div>
+										</th:block>
+
+										<!-- Đặt bàn sản phẩm -->
+										<th:block
+											th:if="${listBookingProductDetail != null && listBookingProductDetail.size != 0}">
+											<p class="font-weight-bold">Sản Phẩm Đã Chọn</p>
+											<div class="table-responsive mb-4">
+												<table class="table">
+													<thead>
+														<tr>
+															<th colspan="2">Sản Phẩm</th>
+															<th>Giá</th>
+															<th>Số Lượng</th>
+															<th>Tổng Tiền</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="item:${listBookingProductDetail}">
+															<td class="align-middle" width="125"><img alt=""
+																th:src="@{/} + ${item.product.avatar}" width="120px"
+																height="80px"></td>
+															<td><a
+																th:href="@{/product/} + ${item.product.productId}"
+																th:text="${item.product.productName}"></a></td>
+															<td th:text="${item.getStringSalePrice}">100.000 VNĐ</td>
+															<td th:text="${item.quantity}"></td>
+															<td th:text=${item.getStringTotalPrice}>1.000.000
+																VNĐ</td>
+														</tr>
+
+													</tbody>
+												</table>
+											</div>
+										</th:block>
+
+										<div class="row mt-4 p-3">
+											<div class="card w-100">
+												<div class="card-body">
+													<div class="card-title">
+														<h5 class="font-weight-bold" align="center">Thanh
+															Toán Đặt Cọc</h5>
+													</div>
+													<label class="font-weight-bold">Thông tin đặt cọc</label>
+													<ul>
+														<li
+															th:text="'Số tiền đặt cọc: ' + ${bookingForm.getStringDeposit}"></li>
+
+													</ul>
+													<br> <label class="font-weight-bold">Chọn hình
+														thức thanh toán</label>
+													<div class="custom-control custom-radio"
+														th:each="paymentMethod : ${listPaymentMethods}">
+														<input type="radio"
+															th:id="'paymentMethod' + ${paymentMethod.paymentMethodId}"
+															th:field="*{paymentMethodId}" name="paymentMethodId"
+															class="custom-control-input"
+															th:value="${paymentMethod.paymentMethodId}" required> <label
+															class="custom-control-label"
+															th:for="'paymentMethod' + ${paymentMethod.paymentMethodId}"
+															th:text="${paymentMethod.paymentMethodName}"></label>
+													</div>
+
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="row mt-4 border-top pt-4">
+										<table class="ml-auto mr-3 total-price-table">
+											<thead>
+												<tr>
+													<th style="min-width: 150px"></th>
+													<th style="min-width: 150px"></th>
+												</tr>
+											</thead>
+											<tbody>
+
+												<tr>
+													<td>Giảm giá</td>
+													<td id="lblDiscount"
+														th:text="${bookingForm.getStringDiscount}"></td>
+												</tr>
+												<tr>
+													<td>Tổng tiền</td>
+													<td id="lblTotalPriceBooking"
+														th:text="${bookingForm.getStringTotalPrice}"></td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+									<button type="submit"
+										class="btn mt-3 btn-dark text-light btn-small w-100">Đặt
+										Bàn</button>
+								</div>
+							</div>
+
+
+						</div>
+					</form>
+
+
+				</div>
+			</div>
+		</div>
+		<!-- main-content-wrap end -->
+		<!-- END MAIN CONTENT -->
+
+
+		<footer th:replace="/fragments/web-fragments::web-footer-fragment">
+
+		</footer>
+
+
+
+	</div>
+
+	<!-- JS
+============================================ -->
+
+	<!-- Modernizer JS -->
+	<script th:src="@{/web/assets/js/vendor/modernizr-3.6.0.min.js}"
+		src="../../web/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<!-- jQuery JS -->
+	<script th:src="@{/web/assets/js/vendor/jquery-3.3.1.min.js}"
+		src="../../web/assets/js/vendor/jquery-3.3.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script th:src="@{/web/assets/js/vendor/popper.min.js}"
+		src="../../web/assets/js/vendor/popper.min.js"></script>
+	<script th:src="@{/web/assets/js/vendor/bootstrap.min.js}"
+		src="../../web/assets/js/vendor/bootstrap.min.js"></script>
+
+	<!-- Slick Slider JS -->
+	<script th:src="@{/web/assets/js/plugins/slick.min.js}"
+		src="../../web/assets/js/plugins/slick.min.js"></script>
+	<!--  Jquery ui JS -->
+	<script th:src="@{/web/assets/js/plugins/jqueryui.min.js}"
+		src="../../web/assets/js/plugins/jqueryui.min.js"></script>
+	<!--  Scrollup JS -->
+	<script th:src="@{/web/assets/js/plugins/scrollup.min.js}"
+		src="../../web/assets/js/plugins/scrollup.min.js"></script>
+	<script th:src="@{/web/assets/js/plugins/ajax-contact.js}"
+		src="../../web/assets/js/plugins/ajax-contact.js"></script>
+
+	<script
+		src="https://rawgit.com/notifyjs/notifyjs/master/dist/notify.js"></script>
+
+
+	<!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+	<!--
+	<script src="../../web/assets/js/vendor/vendor.min.js"></script>
+	<script src="../../web/assets/js/plugins/plugins.min.js"></script>
+	-->
+
+	<!-- Main JS -->
+	<script th:src="@{/web/assets/js/main.js}" src="/web/assets/js/main.js"></script>
+
+	<script th:src="@{/web/assets/js/cart-product.js}"
+		src="/web/assets/js/cart-product.js"></script>
+	<script th:src="@{/web/assets/js/apply-discount-code.js}"
+		src="/web/assets/js/apply-discount-code.js"></script>
+
+	<script type="text/javascript">
+		function showChangePasswordDiv() {
+			var changePasswordDiv = document
+					.getElementById("changePasswordDiv");
+			if (document.getElementById("changePassword").checked) {
+				changePasswordDiv.classList.remove("hidden");
+			} else {
+				changePasswordDiv.classList.add("hidden");
+			}
+		}
+
+		function checkConfirmPassword() {
+			var newPassword = document.getElementById("newPassword").value;
+			var confirmNewPassword = document
+					.getElementById("confirmNewPassword").value;
+			var notification = document
+					.getElementById("confirm_password_message");
+			if (newPassword != "") {
+				notification.classList.remove("hidden");
+				if (newPassword != confirmNewPassword) {
+					notification.style.color = 'red';
+					notification.innerHTML = 'Mật khẩu không trùng khớp!';
+				} else {
+					notification.style.color = 'green';
+					notification.innerHTML = 'Mật khẩu trùng khớp!';
+				}
+			} else {
+				notification.classList.add("hidden");
+			}
+		}
+	</script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head>
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Admin - Quản Lý Quản Trị Viên Thương Hiệu</title>
+</head>
+
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/admin-menu::admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-12">
+							<ol class="breadcrumb mb-4">
+								<li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+								<li class="breadcrumb-item active">Quản Lý Quản Trị Viên
+									Thương Hiệu</li>
+							</ol>
+
+							<div class="card mb-4">
+								<div class="card-header">
+									<i class="far fa-plus-square mr-1"></i> Thêm quản trị viên
+									thương hiệu
+								</div>
+								<div class="card-body">
+									<form action="/admin/brand-admin/new" method="POST">
+
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Id thương hiệu</label> <input class="form-control"
+														type="text" name="brandId" id="brandId" th:value="${brandId}" required>
+														<p class="error" th:if="${notExistBrand}" th:text="${notExistBrand}">
+												</div>
+												<div class="form-group">
+													<label>Username</label> <input class="form-control"
+														type="text" th:value="${username}" name="username" id="username" required>
+														<p class="error" th:if="${notExistAccount}" th:text="${notExistAccount}">
+														<p class="error" th:if="${existedBrandAccount}" th:text="${existedBrandAccount}">
+												</div>
+												
+												<div class="form-group">
+													<input class="btn btn-success w-100" type="submit"
+														value="Thêm">
+												</div>
+											</div>
+
+
+										</div>
+
+									</form>
+								</div>
+							</div>
+
+							<div class="card mb-4">
+								<div class="card-header">
+									<i class="fas fa-table mr-1"></i> DataTable
+								</div>
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-bordered" id="dataTable"
+											width="100%" cellspacing="0">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>Thương Hiệu</th>
+													<th>Quản trị viên</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th>ID</th>
+													<th>Thương Hiệu</th>
+													<th>Quản trị viên</th>
+													<th>Action</th>
+												</tr>
+											</tfoot>
+											<tbody id="data">
+												<!-- Insert data with this type -->
+												<tr th:each="item: ${listBrandAccount}">
+													<td th:text="${item.brandAccountId}">1</td>
+													<td><a
+														th:href="@{/admin/brand/} + ${item.brand.brandId} + @{/edit}"
+														th:text="${item.brand.brandName}">San Fu Lo</a></td>
+													<td><a
+														th:href="@{/admin/account/} + ${item.account.accountId} + @{/edit}"
+														th:text="${item.account.username}">brand1-admin</a></td>
+													<td>
+														<div class="btn-group">
+															<a class="btn btn-outline-success btn-sm"
+																th:href="@{/admin/brand-admin/} + ${item.brandAccountId} + @{/edit}">Sửa</a>
+															<a class="btn btn-outline-danger btn-sm"
+																th:href="@{/admin/brand-admin/} + ${item.brandAccountId} + @{/delete}">Xoá</a>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+		</div>
+	</div>
+</body>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/admin/dist/js/scripts.js/>"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+	crossorigin="anonymous"></script>
+<script src="/admin/dist/assets/demo/chart-area-demo.js/>"></script>
+<script src="/admin/dist/assets/demo/chart-bar-demo.js/>"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="/admin/dist/assets/demo/datatables-demo.js/>"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#dataTable').DataTable();
+	});
+</script>
+</html>

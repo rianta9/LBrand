@@ -1,0 +1,66 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>Ckfinder</title>
+</head>
+<body>
+	<div id="page-content-wrapper">
+		<h1 id="home" class="text-center font-bold mt-1">Integrate
+			ckfinder into ckeditor in spring boot project</h1>
+		<h2>ShareEverythings.com</h2>
+		<!-- Section: Create Page -->
+		<section class="section mt-5 container-fluid">
+			<!-- First row -->
+			<div class="row">
+				<!-- First col -->
+				<div class="col-lg-6">
+					<h3>A. Integrate ckfinder into ckeditor</h3>
+					<!-- Second card -->
+					<div class="card mb-r">
+						<form th:action="@{/do-test-ckeditor}" method="POST">
+							<textarea name="content" id="content" rows="50"></textarea>
+							<input type="submit" value="Gửi">
+						</form>
+					</div>
+					<!-- /.Second card -->
+				</div>
+
+
+			</div>
+			<!-- /.First row -->
+		</section>
+		<!-- /.Section: Create Page -->
+
+	</div>
+	<script src="/ckfinder/static/samples/js/sf.js"></script>
+	<script src="/ckfinder/static/samples/js/tree-a.js"></script>
+	<script src="https://cdn.ckeditor.com/4.12.1/standard-all/ckeditor.js"></script>
+	<script src="/ckfinder/static/ckfinder.js"></script>
+	<script>
+		//Note: in this sample we use CKEditor with two extra plugins:
+		// - uploadimage to support pasting and dragging images,
+		// - image2 (instead of image) to provide images with captions.
+		// Additionally, the CSS style for the editing area has been slightly modified to provide responsive images during editing.
+		// All these modifications are not required by CKFinder, they just provide better user experience.
+		if (typeof CKEDITOR !== 'undefined') {
+			CKEDITOR.disableAutoInline = true;
+			CKEDITOR.addCss('img {max-width:100%; height: auto;}');
+			CKEDITOR.config.height='600px';
+			var editor = CKEDITOR.replace('content', {
+				filebrowserBrowseUrl : '/ckfinder/static/ckfinder.html',
+				filebrowserImageBrowseUrl : '/ckfinder/static/ckfinder.html?type=Images',
+				filebrowserFlashBrowseUrl : '/ckfinder/static/ckfinder.html?type=Flash',
+				filebrowserUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Files',
+				filebrowserImageUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Images',
+				filebrowserFlashUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Flash'
+			});
+			CKFinder.setupCKEditor(editor);
+		} else {
+			document.getElementById('content').innerHTML = '<div class="tip-a tip-a-alert">This sample requires working Internet connection to load CKEditor 4 from CDN.</div>'
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<th:block th:replace="/fragments/web-fragments::web-head-fragment"></th:block>
+<title>LBrand - Tài Khoản Của Tôi</title>
+
+</head>
+
+<body>
+
+	<div class="main-wrapper">
+
+		<header class="fl-header"
+			th:replace="/fragments/web-fragments::web-header-fragment">
+
+		</header>
+
+
+
+		<!-- MAIN CONTENT -->
+		<!-- breadcrumb-area start -->
+		<div class="container" style="background-color: #eee">
+			<div class="row mt-3">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb" style="background-color: #eee">
+						<li class="breadcrumb-item"><a th:href="@{/home}">Trang
+								Chủ</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Tài
+							Khoản Của Tôi</li>
+
+					</ol>
+				</nav>
+			</div>
+
+		</div>
+		<!-- breadcrumb-area end -->
+
+		<!-- main-content-wrap start -->
+		<div class="main-content-wrap my-account-page">
+			<div class="container mb-3">
+				<div class="row pt-3 pb-3">
+					<div class="col-12">
+						<div class="account-dashboard">
+
+							<div class="row">
+								<div class="col-md-12 col-lg-2">
+									<!-- Nav tabs -->
+									<ul role="tablist" class="nav flex-column dashboard-list">
+										<li><a href="/my-account" 
+											class="nav-link active">Thông tin tài khoản</a></li>
+										<li><a href="/my-account#notification" 
+											class="nav-link">Thông báo của tôi</a></li>
+										<li><a href="/my-account/booking-history"
+											 class="nav-link">Đơn đặt bàn</a></li>
+										<li><a href="/my-account/review" class="nav-link"
+											>Đánh giá thương hiệu</a></li>
+										<li><a href="/logout" class="nav-link">Đăng xuất</a></li>
+									</ul>
+								</div>
+								<div class="col-md-12 col-lg-10">
+									<!-- Tab panes -->
+									<div class="dashboard-content">
+
+										<div id="booking-history">
+											<h3>Đơn Đặt Bàn</h3>
+											<div class="table-responsive">
+												<table class="table table-bordered mb-3" id="dataTable">
+													<thead>
+														<tr>
+															<th>ID</th>
+															<th>Ngày Đặt</th>
+															<th>Thương Hiệu</th>
+															<th>Thời Điểm Đến</th>
+															<th>Loại</th>
+															<th>Tổng Tiền</th>
+															<th>Trạng Thái</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="item:${listBooking}">
+															<td><a
+																th:href="@{/my-account/booking-detail/} + ${item.bookingId}"
+																th:text="'#' + ${item.getStringId}" class="text-primary"></a></td>
+															<td th:text="${item.getStringDateCreated}">12/02/2021</td>
+															<td th:text="${item.brandCapacity.brand.brandName}">San
+																Fu Lo</td>
+															<td
+																th:text="${item.getStringTimeIn} + ' ' + ${item.getStringDateIn}">10:00
+																14/04/2021</td>
+															<td th:text=${item.getBookingType}>Đặt bàn gọi món</td>
+															<td th:text=${item.getStringTotalPrice}>1.000.000
+																VNĐ</td>
+															<td th:text=${item.bookingStatus.bookingStatusName}>Đặt
+																bàn gọi món</td>
+														</tr>
+
+													</tbody>
+												</table>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- main-content-wrap end -->
+		<!-- END MAIN CONTENT -->
+
+
+		<footer th:replace="/fragments/web-fragments::web-footer-fragment">
+
+		</footer>
+
+
+
+	</div>
+
+	<!-- JS
+============================================ -->
+
+	<!-- Modernizer JS -->
+	<script th:src="@{/web/assets/js/vendor/modernizr-3.6.0.min.js}"
+		src="../../web/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<!-- jQuery JS -->
+	<script th:src="@{/web/assets/js/vendor/jquery-3.3.1.min.js}"
+		src="../../web/assets/js/vendor/jquery-3.3.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script th:src="@{/web/assets/js/vendor/popper.min.js}"
+		src="../../web/assets/js/vendor/popper.min.js"></script>
+	<script th:src="@{/web/assets/js/vendor/bootstrap.min.js}"
+		src="../../web/assets/js/vendor/bootstrap.min.js"></script>
+
+	<!-- Slick Slider JS -->
+	<script th:src="@{/web/assets/js/plugins/slick.min.js}"
+		src="../../web/assets/js/plugins/slick.min.js"></script>
+	<!--  Jquery ui JS -->
+	<script th:src="@{/web/assets/js/plugins/jqueryui.min.js}"
+		src="../../web/assets/js/plugins/jqueryui.min.js"></script>
+	<!--  Scrollup JS -->
+	<script th:src="@{/web/assets/js/plugins/scrollup.min.js}"
+		src="../../web/assets/js/plugins/scrollup.min.js"></script>
+	<script th:src="@{/web/assets/js/plugins/ajax-contact.js}"
+		src="../../web/assets/js/plugins/ajax-contact.js"></script>
+
+	<!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+	<!--
+	<script src="../../web/assets/js/vendor/vendor.min.js"></script>
+	<script src="../../web/assets/js/plugins/plugins.min.js"></script>
+	-->
+
+	<!-- Main JS -->
+	<script th:src="@{/web/assets/js/main.js}"
+		src="../../web/assets/js/main.js"></script>
+
+	<script
+		src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+	<script src="/admin/dist/assets/demo/datatables-demo.js/>"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#dataTable').DataTable();
+		});
+	</script>
+
+</body>
+
+</html>

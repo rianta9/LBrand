@@ -1,0 +1,712 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<th:block th:replace="/fragments/web-fragments::web-head-fragment"></th:block>
+<title>LBrand - Tìm Kiếm Dịch Vụ</title>
+
+</head>
+
+<body>
+
+	<div class="main-wrapper">
+
+		<header class="fl-header"
+			th:replace="/fragments/web-fragments::web-header-fragment">
+		</header>
+
+
+		<!-- MAIN CONTENT -->
+		<!-- breadcrumb-area start -->
+		<!-- <div class="breadcrumb-area section-ptb">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						breadcrumb-list start
+						<ul class="breadcrumb-list">
+							<li class="breadcrumb-item"><a href="index.html">Trang Chủ</a></li>
+							<li class="breadcrumb-item active">Thương Hiệu</li>
+						</ul>
+						breadcrumb-list end
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<!-- breadcrumb-area end -->
+
+		<div class="container" style="background-color: #eee">
+			<div class="row mt-3">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb" style="background-color: #eee">
+						<li class="breadcrumb-item"><a th:href="@{/home}">Trang
+								Chủ</a></li>
+						<li class="breadcrumb-item active">Tìm Kiếm Dịch Vụ</li>
+
+					</ol>
+				</nav>
+			</div>
+
+		</div>
+		<!-- main-content-wrap start -->
+		<div class="main-content-wrap shop-page">
+			<div class="container pt-3 pb-3">
+				<div class="row">
+					<div class="col-lg-3 order-lg-1 order-2">
+						<!-- shop-sidebar-wrap start -->
+						<div class="shop-sidebar-wrap">
+
+
+
+							<!-- shop-sidebar start -->
+							<div class="shop-sidebar mb-30">
+								<h4 class="title">Danh Mục</h4>
+								<!-- filter-price-content start -->
+								<ul>
+									<li th:each="item : ${listServiceCategory}"><a
+										th:href="@{/search?type=service&category=} + ${item.categoryCode}"
+										th:text="${item.categoryName}"></a></li>
+								</ul>
+								<!-- filter-price-content end -->
+							</div>
+							<!-- shop-sidebar end -->
+
+
+							<!-- shop-sidebar start -->
+							<div class="sidbar-product shop-sidebar mb-30">
+								<h4 class="title">Top Dịch Vụ Nổi Bật</h4>
+								<!-- sidbar-product-inner start -->
+								<div class="sidbar-product-inner"
+									th:each="item : ${top10Service}">
+									<div class="product-image w-30">
+										<a th:href="@{/service/} + ${item.serviceId}"><img
+											th:src="@{/} + ${item.avatar}" alt="" height="75px"></a>
+									</div>
+									<div class="product-content text-left w-70">
+										<h3>
+											<a th:href="@{/service/} + ${item.serviceId}"
+												th:text="${item.serviceName}"
+												style="line-height: 1.5; max-width: 100%"></a>
+										</h3>
+
+										<div>
+											<a th:href="@{/brand/} + ${item.brand.brandId}"
+												th:text="${item.brand.brandName}"
+												style="line-height: 1.5; max-width: 100%"></a>
+											<p th:text="${item.getStringSalePriceForAdult()}"></p>
+										</div>
+
+									</div>
+								</div>
+								<!-- sidbar-product-inner end -->
+
+							</div>
+							<!-- shop-sidebar end -->
+
+
+						</div>
+						<!-- shop-sidebar-wrap end -->
+					</div>
+					<div class="col-lg-9 order-lg-2 order-1">
+						<!-- shop-product-wrapper start -->
+						<div class="shop-product-wrapper">
+							<div class="row">
+								<div class="col">
+									<!-- shop-top-bar start -->
+									<div class="shop-top-bar">
+										<!-- product-view-mode start -->
+
+										<div class="product-mode">
+											<!--shop-item-filter-list-->
+											<ul class="nav shop-item-filter-list" role="tablist">
+												<li class="active"><a class="active" data-toggle="tab"
+													href="#grid"><i class="ion-ios-keypad-outline"></i></a></li>
+												<li><a data-toggle="tab" href="#list"><i
+														class="ion-ios-list-outline"></i></a></li>
+											</ul>
+											<!-- shop-item-filter-list end -->
+										</div>
+										<!-- product-view-mode end -->
+										<!-- product-short start -->
+										<div class="product-short">
+											<select class="nice-select" name="sortby"
+												onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+												<option value="">Sắp xếp</option>
+												<option th:value="${linkOrderBy} + '&orderBy=new'"
+													th:selected="${orderBy != null && orderBy == 'new'}">Dịch
+													vụ mới</option>
+												<option th:value="${linkOrderBy} + '&orderBy=sale'"
+													th:selected="${orderBy != null && orderBy == 'sale'}">Đang giảm giá</option>
+												<option th:value="${linkOrderBy} + '&orderBy=price-desc'"
+													th:selected="${orderBy != null && orderBy == 'price-desc'}"
+													value="price-desc">Xếp theo giá cao</option>
+												<option th:value="${linkOrderBy} + '&orderBy=price-asc'"
+													th:selected="${orderBy != null && orderBy == 'price-asc'}">Xếp
+													theo giá thấp</option>
+												<option th:value="${linkOrderBy} + '&orderBy=trending'"
+													th:selected="${orderBy != null && orderBy == 'trending'}">Theo
+													độ phổ biến</option>
+												<option th:value="${linkOrderBy} + '&orderBy=favourite'"
+													th:selected="${orderBy != null && orderBy == 'favourite'}">Theo
+													lượt yêu thích</option>
+											</select>
+										</div>
+										<!-- product-short end -->
+									</div>
+									<!-- shop-top-bar end -->
+								</div>
+							</div>
+
+
+							<!-- Tìm kiếm nâng cao -->
+							<div class="shop-top-bar">
+								<form action="/search" method="GET" class="w-100">
+									<div class="row mb-2">
+										<!-- <div class="col-md-6 col-12 m-auto">
+											<div id="price-slider" class="price-slider m-auto"></div>
+										</div>
+										<div class="col-md-6 col-12 m-auto">
+											<div class="filter-price-wapper">
+												<div class="filter-price-cont m-auto">
+													<div class="input-type" style="width: 80px">
+														<input type="text" name="minPrice" id="min-price" readonly
+															width="120px" />
+													</div>
+													<span>—</span>
+													<div class="input-type" style="width: 80px">
+														<input type="text" name="maxPrice" id="max-price" readonly
+															width="120px" />
+													</div>
+
+
+												</div>
+											</div>
+										</div> -->
+										<div class="col-md-6 col-12">
+											<select class="custom-select" name="priceRange">
+												<option value="all">Khoảng giá</option>
+												<option value="level1"
+													th:selected="${priceRange != null && priceRange == 'level1'}">Từ 100.000đ đến 300.000đ</option>
+												<option value="level2"
+													th:selected="${priceRange != null && priceRange == 'level2'}">Từ 300.000đ đến 500.000đ</option>
+												<option value="level3"
+													th:selected="${priceRange != null && priceRange == 'level3'}">Từ 500.000đ đến 1.000.000đ</option>
+												<option value="level4"
+													th:selected="${priceRange != null && priceRange == 'level4'}">Từ 1.000.000 đến 2.000.000đ</option>
+												<option value="level5"
+													th:selected="${priceRange != null && priceRange == 'level5'}">Trên 2.000.000đ</option>
+											</select>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-3 col-6 mb-2">
+											<select class="custom-select" name="category">
+												<option value="all">Danh mục</option>
+												<option th:each="item:${listServiceCategory}"
+													th:value="${item.categoryCode}"
+													th:text="${item.categoryName}"
+													th:selected="${categoryCode != null && categoryId == item.categoryCode}"></option>
+											</select>
+										</div>
+										<div class="col-md-3 col-6 mb-2">
+											<select class="custom-select" name="orderBy">
+												<option value="default">Sắp xếp</option>
+												<option value="new"
+													th:selected="${orderBy != null && orderBy == 'new'}">Dịch
+													vụ mới</option>
+												<option value="sale"
+													th:selected="${orderBy != null && orderBy == 'sale'}">Đang giảm giá</option>
+												<option value="price-desc"
+													th:selected="${orderBy != null && orderBy == 'price-desc'}">Giá
+													cao</option>
+												<option value="price-asc"
+													th:selected="${orderBy != null && orderBy == 'price-asc'}">Giá
+													thấp</option>
+												<option value="trending"
+													th:selected="${orderBy != null && orderBy == 'trending'}">Độ
+													phổ biến</option>
+												<option value="favourite"
+													th:selected="${orderBy != null && orderBy == 'favourite'}">Lượt
+													yêu thích</option>
+											</select> <select class="custom-select hidden" name="type">
+												<option value="service" selected>Dịch vụ</option>
+											</select>
+										</div>
+										<div class="col-md-6 col-12 mb-2">
+											<div class="input-group w-100">
+												<input type="text" name="q" th:value="${keyword}"
+													class="form-control w-auto" placeholder="Nhập từ khoá...">
+												<div class="input-group-append" id="button-addon4">
+													<button class="btn btn-dark" type="submit">Tìm</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+
+							<!-- shop-products-wrap start -->
+							<div class="shop-products-wrap">
+								<div class="tab-content">
+									<div class="tab-pane active" id="grid">
+										<div class="shop-product-wrap">
+											<div class="row p-3">
+												<p th:text="'Có ' + ${totalItems} + ' kết quả tìm kiếm!'">
+											</div>
+											<div class="row">
+												<div class="col-lg-4 col-md-4 col-6"
+													th:each="item: ${listService}">
+													<!-- single-product-wrap start -->
+													<div class="single-product-wrap">
+														<div class="product-image">
+															<a th:href="@{/service/} + ${item.serviceId}"><img
+																th:src="@{/} + ${item.avatar}"
+																th:alt="${item.serviceName}" height="190px"></a>
+															<th:block th:if="${item.differencePriceAdult()>=10}">
+																<span
+																	th:text="@{- } + ${item.differencePriceAdult()} + @{%}"
+																	class="label"></span>
+															</th:block>
+															<div class="product-action">
+																<a href="#" class="add-to-cart"><i
+																	class="ion-android-checkbox-outline"></i></a> <a href="#"
+																	class="wishlist"><i
+																	class="ion-android-favorite-outline"></i></a> <a
+																	th:href="@{/service/} + ${item.serviceId}"
+																	class="quick-view" data-toggle="modal"
+																	data-target="#exampleModalCenter"><i
+																	class="far fa-eye"></i></a>
+															</div>
+														</div>
+														<div class="product-content">
+															<h3>
+																<a th:href="@{/service/} + ${item.serviceId}"
+																	th:text="${item.serviceName}"></a>
+															</h3>
+															<div class="price-box">
+																<a th:href="@{/brand/} + ${item.brand.brandId}"
+																	th:text="${item.brand.brandName}"
+																	style="line-height: 1.5; max-width: 100%"></a>
+																<p>
+																	<span th:if="${item.differencePriceAdult() > 0}"
+																		th:text="${item.getStringPriceForAdult()}"
+																		class="old-price"></span> <span
+																		th:text="${item.getStringSalePriceForAdult()}"
+																		class="new-price"></span>
+																</p>
+															</div>
+														</div>
+													</div>
+													<!-- single-product-wrap end -->
+												</div>
+
+												<!-- single-product-wrap end -->
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane" id="list">
+										<div class="shop-product-list-wrap">
+											<div class="row product-layout-list"
+												th:each="item: ${listService}">
+												<div class="col-lg-4 col-md-5">
+													<!-- single-product-wrap start -->
+													<div class="single-product-wrap">
+														<div class="product-image">
+															<a th:href="@{/service/} + ${item.serviceId}"><img
+																th:src="@{/} + ${item.avatar}"
+																th:alt="${item.serviceName}" height="170px"></a>
+															<th:block th:if="${item.differencePriceAdult()>=20}">
+																<span
+																	th:text="@{- } + ${item.differencePriceAdult()} + @{%}"
+																	class="label"></span>
+															</th:block>
+															<div class="product-action">
+																<a href="#" class="add-to-cart"><i
+																	class="ion-android-checkbox-outline"></i></a> <a href="#"
+																	class="wishlist"><i
+																	class="ion-android-favorite-outline"></i></a> <a
+																	th:href="@{/service/} + ${item.serviceId}"
+																	class="quick-view" data-toggle="modal"
+																	data-target="#exampleModalCenter"><i
+																	class="far fa-eye"></i></a>
+															</div>
+														</div>
+													</div>
+													<!-- single-product-wrap end -->
+												</div>
+												<div class="col-lg-8 col-md-7">
+													<div class="product-content text-left">
+														<h3>
+															<a th:href="@{/service/} + ${item.serviceId}"
+																th:text="${item.serviceName}"></a>
+														</h3>
+														<div class="price-box">
+															Thương hiệu: <a
+																th:href="@{/brand/} + ${item.brand.brandId}"
+																th:text="${item.brand.brandName}"
+																style="line-height: 1.5; max-width: 100%"></a>
+															<p>
+																Giá: <span th:if="${item.differencePriceAdult() > 0}"
+																	th:text="${item.getStringPriceForAdult()}"
+																	class="old-price"></span> <span
+																	th:text="${item.getStringSalePriceForAdult()}"
+																	class="new-price"></span>
+															</p>
+														</div>
+														<p>Lorem ipsum dolor sit amet, consectetur adipisicing
+															elit. Veritatis pariatur ipsa sint consectetur velit
+															maiores sit voluptates aut tempora totam, consequatur
+															iste quod suscipit natus. Explicabo facere neque adipisci
+															odio.</p>
+													</div>
+												</div>
+											</div>
+
+
+
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- shop-products-wrap end -->
+
+							<!-- paginatoin-area start -->
+							<th:block th:if="${totalPages != null && totalPages > 1}">
+								<div class="paginatoin-area">
+									<div class="row">
+										<div class="col-lg-12 col-md-12">
+											<ul class="pagination-box">
+												<li><a class="Previous"
+													th:href="${linkPage} + @{&page=} + ${previousPage}"><i
+														class="ion-chevron-left"></i></a></li>
+												<li th:each="item:${#numbers.sequence( 1, totalPages)}"
+													th:class="${currentPage == item}?'active'"><a
+													th:href="${linkPage} + @{&page=} + ${item}"
+													th:text="${item}"></a></li>
+												<li><a class="Next"
+													th:href="${linkPage} + @{&page=} + ${nextPage}"><i
+														class="ion-chevron-right"></i> </a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</th:block>
+							<!-- paginatoin-area end -->
+						</div>
+						<!-- shop-product-wrapper end -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- main-content-wrap end -->
+
+
+
+		<!-- Start Product Area -->
+		<div class="container mb-3" style="background-color: #eee">
+			<div class="row">
+				<div class="col-lg-12 pb-3" style="background-color: white">
+					<div class="product-details-tab mt-30">
+						<ul class="nav" role="tablist">
+							<th:block sec:authorize="isAuthenticated()">
+								<li><a href="#recommendedservice" data-toggle="tab"
+									role="tab" aria-controls="recommendedservice"
+									aria-selected="true" class="active">Gợi Ý Cho Bạn</a></li>
+							</th:block>
+							<th:block sec:authorize="isAuthenticated()">
+								<li><a href="#topservice" data-toggle="tab" role="tab"
+									aria-controls="topservice" aria-selected="false">Dịch Vụ
+										Nổi Bật</a></li>
+							</th:block>
+							<th:block sec:authorize="isAnonymous()">
+								<li><a href="#topservice" data-toggle="tab" role="tab"
+									aria-controls="topservice" aria-selected="true" class="active">Dịch
+										Vụ Nổi Bật</a></li>
+							</th:block>
+							<th:block sec:authorize="isAuthenticated()">
+								<li><a href="#viewedservice" data-toggle="tab" role="tab"
+									aria-controls="viewedservice" aria-selected="false">Dịch Vụ
+										Đã Xem</a></li>
+							</th:block>
+						</ul>
+						<div class="tab-content">
+
+							<th:block sec:authorize="isAuthenticated()">
+								<!-- Recommend Service -->
+								<div class="product_tab_content tab-pane active"
+									id="recommendedservice">
+									<div class="row product-active-lg-4">
+
+										<div class="col-lg-3"
+											th:each="item : ${listRecommendedService}">
+											<!-- single-product-wrap start -->
+											<div class="single-product-wrap">
+												<div class="product-image">
+													<a th:href="@{/service/} + ${item.serviceId}"><img
+														th:src="@{/} + ${item.avatar}"
+														th:alt="${item.serviceName}" height="190px"></a>
+													<th:block th:if="${item.differencePriceAdult()>=10}">
+														<span
+															th:text="@{- } + ${item.differencePriceAdult()} + @{%}"
+															class="label"></span>
+													</th:block>
+													<div class="product-action">
+														<a href="#" class="add-to-cart"><i
+															class="ion-android-checkbox-outline"></i></a> <a href="#"
+															class="wishlist"><i
+															class="ion-android-favorite-outline"></i></a> <a
+															th:href="@{/service/} + ${item.serviceId}"
+															class="quick-view"><i class="far fa-eye"></i></a>
+													</div>
+												</div>
+												<div class="product-content">
+													<h3>
+														<a th:href="@{/service/} + ${item.serviceId}"
+															th:text="${item.serviceName}"></a>
+													</h3>
+													<div class="price-box">
+														<a th:href="@{/brand/} + ${item.brand.brandId}"
+															th:text="${item.brand.brandName}"
+															style="line-height: 1.5; max-width: 100%"></a>
+														<p>
+															<span th:if="${item.differencePriceAdult() > 0}"
+																th:text="${item.getStringPriceForAdult()}"
+																class="old-price"></span> <span
+																th:text="${item.getStringSalePriceForAdult()}"
+																class="new-price"></span>
+														</p>
+													</div>
+												</div>
+											</div>
+											<!-- single-product-wrap end -->
+										</div>
+
+									</div>
+								</div>
+								<!-- END Recommends Service -->
+							</th:block>
+
+							<!-- Top Hot Service -->
+							<th:block sec:authorize="isAuthenticated()">
+								<div class="product_tab_content tab-pane" id="topservice"
+									role="tabpanel">
+									<div class="row product-active-lg-4">
+
+										<div class="col-lg-3 col-md-4"
+											th:each="item : ${topHotService}">
+											<!-- single-product-wrap start -->
+											<div class="single-product-wrap">
+												<div class="product-image">
+													<a th:href="@{/service/} + ${item.serviceId}"><img
+														th:src="@{/} + ${item.avatar}"
+														th:alt="${item.serviceName}" height="190px"></a>
+													<th:block th:if="${item.differencePriceAdult()>=10}">
+														<span
+															th:text="@{- } + ${item.differencePriceAdult()} + @{%}"
+															class="label"></span>
+													</th:block>
+													<div class="product-action">
+														<a href="#" class="add-to-cart"><i
+															class="ion-android-checkbox-outline"></i></a> <a href="#"
+															class="wishlist"><i
+															class="ion-android-favorite-outline"></i></a> <a
+															th:href="@{/service/} + ${item.serviceId}"
+															class="quick-view"><i class="far fa-eye"></i></a>
+													</div>
+												</div>
+												<div class="product-content">
+													<h3>
+														<a th:href="@{/service/} + ${item.serviceId}"
+															th:text="${item.serviceName}"></a>
+													</h3>
+													<div class="price-box">
+														<a th:href="@{/brand/} + ${item.brand.brandId}"
+															th:text="${item.brand.brandName}"
+															style="line-height: 1.5; max-width: 100%"></a>
+														<p>
+															<span th:if="${item.differencePriceAdult() > 0}"
+																th:text="${item.getStringPriceForAdult()}"
+																class="old-price"></span> <span
+																th:text="${item.getStringSalePriceForAdult()}"
+																class="new-price"></span>
+														</p>
+													</div>
+												</div>
+											</div>
+											<!-- single-product-wrap end -->
+										</div>
+
+									</div>
+								</div>
+							</th:block>
+							<th:block sec:authorize="isAnonymous()">
+								<div class="product_tab_content tab-pane active" id="topservice"
+									role="tabpanel">
+									<div class="row product-active-lg-4">
+
+										<div class="col-lg-3 col-md-4"
+											th:each="item : ${topHotService}">
+											<!-- single-product-wrap start -->
+											<div class="single-product-wrap">
+												<div class="product-image">
+													<a th:href="@{/service/} + ${item.serviceId}"><img
+														th:src="@{/} + ${item.avatar}"
+														th:alt="${item.serviceName}" height="190px"></a>
+													<th:block th:if="${item.differencePriceAdult()>=10}">
+														<span
+															th:text="@{- } + ${item.differencePriceAdult()} + @{%}"
+															class="label"></span>
+													</th:block>
+													<div class="product-action">
+														<a href="#" class="add-to-cart"><i
+															class="ion-android-checkbox-outline"></i></a> <a href="#"
+															class="wishlist"><i
+															class="ion-android-favorite-outline"></i></a> <a
+															th:href="@{/service/} + ${item.serviceId}"
+															class="quick-view"><i class="far fa-eye"></i></a>
+													</div>
+												</div>
+												<div class="product-content">
+													<h3>
+														<a th:href="@{/service/} + ${item.serviceId}"
+															th:text="${item.serviceName}"></a>
+													</h3>
+													<div class="price-box">
+														<a th:href="@{/brand/} + ${item.brand.brandId}"
+															th:text="${item.brand.brandName}"
+															style="line-height: 1.5; max-width: 100%"></a>
+														<p>
+															<span th:if="${item.differencePriceAdult() > 0}"
+																th:text="${item.getStringPriceForAdult()}"
+																class="old-price"></span> <span
+																th:text="${item.getStringSalePriceForAdult()}"
+																class="new-price"></span>
+														</p>
+													</div>
+												</div>
+											</div>
+											<!-- single-product-wrap end -->
+										</div>
+
+									</div>
+								</div>
+							</th:block>
+							<!-- End Top Hot Service -->
+
+
+							<th:block sec:authorize="isAuthenticated()">
+								<!-- Viewed Service -->
+								<div class="product_tab_content tab-pane " id="viewedservice"
+									role="tabpanel">
+									<div class="row product-active-lg-4">
+
+										<div class="col-lg-3 col-md-4"
+											th:each="item: ${listViewedService}">
+											<!-- single-product-wrap start -->
+											<div class="single-product-wrap">
+												<div class="product-image">
+													<a th:href="@{/service/} + ${item.serviceId}"><img
+														th:src="@{/} + ${item.avatar}"
+														th:alt="${item.serviceName}" height="190px"></a>
+													<th:block th:if="${item.differencePriceAdult()>=10}">
+														<span
+															th:text="@{- } + ${item.differencePriceAdult()} + @{%}"
+															class="label"></span>
+													</th:block>
+													<div class="product-action">
+														<a href="#" class="add-to-cart"><i
+															class="ion-android-checkbox-outline"></i></a> <a href="#"
+															class="wishlist"><i
+															class="ion-android-favorite-outline"></i></a> <a
+															th:href="@{/service/} + ${item.serviceId}"
+															class="quick-view"><i class="far fa-eye"></i></a>
+													</div>
+												</div>
+												<div class="product-content">
+													<h3>
+														<a th:href="@{/service/} + ${item.serviceId}"
+															th:text="${item.serviceName}"></a>
+													</h3>
+													<div class="price-box">
+														<a th:href="@{/brand/} + ${item.brand.brandId}"
+															th:text="${item.brand.brandName}"
+															style="line-height: 1.5; max-width: 100%"></a>
+														<p>
+															<span th:if="${item.differencePriceAdult() > 0}"
+																th:text="${item.getStringPriceForAdult()}"
+																class="old-price"></span> <span
+																th:text="${item.getStringSalePriceForAdult()}"
+																class="new-price"></span>
+														</p>
+													</div>
+												</div>
+											</div>
+											<!-- single-product-wrap end -->
+										</div>
+
+
+									</div>
+								</div>
+								<!-- End Viewed Service -->
+							</th:block>
+						</div>
+					</div>
+
+				</div>
+
+
+			</div>
+		</div>
+		<!-- Start Product End -->
+		<!-- END MAIN CONTENT -->
+
+
+		<footer th:replace="/fragments/web-fragments::web-footer-fragment">
+
+		</footer>
+
+
+
+	</div>
+
+	<!-- JS
+============================================ -->
+
+	<!-- Modernizer JS -->
+	<script th:src="@{/web/assets/js/vendor/modernizr-3.6.0.min.js}"
+		src="../../web/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<!-- jQuery JS -->
+	<script th:src="@{/web/assets/js/vendor/jquery-3.3.1.min.js}"
+		src="../../web/assets/js/vendor/jquery-3.3.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script th:src="@{/web/assets/js/vendor/popper.min.js}"
+		src="../../web/assets/js/vendor/popper.min.js"></script>
+	<script th:src="@{/web/assets/js/vendor/bootstrap.min.js}"
+		src="../../web/assets/js/vendor/bootstrap.min.js"></script>
+
+	<!-- Slick Slider JS -->
+	<script th:src="@{/web/assets/js/plugins/slick.min.js}"
+		src="../../web/assets/js/plugins/slick.min.js"></script>
+	<!--  Jquery ui JS -->
+	<script th:src="@{/web/assets/js/plugins/jqueryui.min.js}"
+		src="../../web/assets/js/plugins/jqueryui.min.js"></script>
+	<!--  Scrollup JS -->
+	<script th:src="@{/web/assets/js/plugins/scrollup.min.js}"
+		src="../../web/assets/js/plugins/scrollup.min.js"></script>
+	<script th:src="@{/web/assets/js/plugins/ajax-contact.js}"
+		src="../../web/assets/js/plugins/ajax-contact.js"></script>
+
+	<!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+	<!--
+	<script src="../../web/assets/js/vendor/vendor.min.js"></script>
+	<script src="../../web/assets/js/plugins/plugins.min.js"></script>
+	-->
+
+	<!-- Main JS -->
+	<script th:src="@{/web/assets/js/main.js}"
+		src="../../web/assets/js/main.js"></script>
+
+</body>
+
+</html>

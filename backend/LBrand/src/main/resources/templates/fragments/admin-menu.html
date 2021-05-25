@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- ADMIN NAV MENU -->
+	<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion"
+		th:fragment="admin-menu-fragment">
+		<div class="sb-sidenav-menu">
+			<div class="nav">
+				<a class="nav-link" href="/admin/dashboard">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-tachometer-alt"></i>
+					</div> Dashboard
+				</a>
+				<div class="sb-sidenav-menu-heading">Quản Lý</div>
+				<a class="nav-link collapsed" href="#" data-toggle="collapse"
+					data-target="#collapseLayouts" aria-expanded="false"
+					aria-controls="collapseLayouts">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-table"></i>
+					</div> Danh Mục
+					<div class="sb-sidenav-collapse-arrow">
+						<i class="fas fa-angle-down"></i>
+					</div>
+				</a>
+				<div class="collapse" id="collapseLayouts"
+					aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+					<nav class="sb-sidenav-menu-nested nav">
+						<a class="nav-link" href="/admin/brand-service-type/list">Loại Hình Dịch Vụ</a>
+						<a class="nav-link" href="/admin/service-category/list">Danh Mục Dịch Vụ</a>
+						<a class="nav-link" href="/admin/product-category/list">Danh Mục Sản Phẩm</a>
+						<a class="nav-link" href="/admin/brand-admin/list">Quản Trị Viên Thương Hiệu</a>
+						<!-- <a class="nav-link" href="/admin/payment/list">Payment Method</a> -->
+					</nav>
+				</div>
+				<a class="nav-link" href="/admin/account/list">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-table"></i>
+					</div> Tài Khoản
+				</a>
+				<a class="nav-link" href="/admin/brand/list">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-table"></i>
+					</div> Thương Hiệu
+				</a>
+				<a class="nav-link" href="/admin/banner/list">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-table"></i>
+					</div> Banner
+				</a>
+				<a class="nav-link collapsed" href="#" data-toggle="collapse"
+					data-target="#collapsePages" aria-expanded="false"
+					aria-controls="collapsePages">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-user fa-fw"></i>
+					</div> My Account
+					<div class="sb-sidenav-collapse-arrow">
+						<i class="fas fa-angle-down"></i>
+					</div>
+				</a>
+				<div class="collapse" id="collapsePages"
+					aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+					<nav class="sb-sidenav-menu-nested nav">
+						<a class="nav-link" href="/admin/my-account">Profile</a> <a
+							class="nav-link" href="/admin/activity-log">Activity Log</a> <a
+							class="nav-link" href="/admin/logout">Đăng Xuất</a>
+					</nav>
+				</div>
+				<a class="nav-link collapsed" href="#" data-toggle="collapse"
+					data-target="#collapseStatistic" aria-expanded="false"
+					aria-controls="collapseStatistic">
+					<div class="sb-nav-link-icon">
+						<i class="fas fa-chart-line"></i>
+					</div> Thống Kê
+					<div class="sb-sidenav-collapse-arrow">
+						<i class="fas fa-angle-down"></i>
+					</div>
+				</a>
+				<div class="collapse" id="collapseStatistic"
+					aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+					<nav class="sb-sidenav-menu-nested nav">
+						<a class="nav-link" href="/admin/statistic/brand">Thương Hiệu</a> 
+						<a class="nav-link" href="/admin/statistic/sales">Đặt Bàn</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<div class="sb-sidenav-footer">
+			<div class="small">Logged in as:</div>
+			<th:block sec:authorize="isAuthenticated()">
+			<span sec:authentication="name"></span>
+			</th:block>
+		</div>
+	</nav>
+
+</body>
+</html>

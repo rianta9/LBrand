@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head>
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Admin - Quản Lý Tài Khoản</title>
+</head>
+
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/admin-menu::admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-12">
+							<ol class="breadcrumb mb-4">
+								<li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+								<li class="breadcrumb-item active">Sửa thông tin tài khoản</li>
+							</ol>
+							<div class="card mb-4 px-4 py-3">
+								<form th:method="POST" th:object="${account}"
+									th:action="@{/admin/account/} +*{accountId}+ @{/delete}">
+
+									<div class="form-group avatar">
+										<div class="text-center">
+											<img th:src="@{/}+${account.avatar}"
+												class="img-circle profile-avatar"
+												style="width: 180px; border: 1px solid; border-radius: 50%;"
+												alt="User avatar">
+											<div class="form-group">
+												<label>Ảnh đại diện</label>
+											</div>
+
+											<!-- <input type="file"
+												th:field="*{avatar}" class="file-uploader" name="Photo"
+												id="Photo"> -->
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Tên đăng nhập:</label> <input type="text"
+													th:field="*{username}" class="form-control"
+													th:value="${account.username}" name="username"
+													id="username" disabled="disabled">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Họ và Tên:</label> <input type="text"
+													class="form-control" th:field="*{fullName}"
+													th:value="${account.fullName}" name="fullname"
+													id="username" disabled="disabled">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Ngày sinh:</label> <input type="date"
+													th:field="*{birthday}" class="form-control"
+													th:value="*{birthday}" name="BirthDate" id="BirthDate"
+													disabled="disabled">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Email:</label> <input type="email"
+													th:field="*{email}" class="form-control"
+													th:value="*{email}" name="email" id="Email"
+													disabled="disabled">
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Điện thoại:</label> <input type="number"
+													th:field="*{phone}" class="form-control"
+													th:value="*{phone}" name="phone" id="Phone"
+													disabled="disabled">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Địa chỉ:</label> <input type="text"
+													th:field="*{address}" class="form-control" name="address"
+													th:value="*{address}" id="Address" disabled="disabled">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Giới tính:</label> <select name="gender"
+													th:field="*{gender}" class="form-control"
+													disabled="disabled">
+													<option th:value="*{gender}" th:text="*{gender}"
+														disabled="disabled"></option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Chức năng:</label> <select name="role"
+													th:field="*{roleId}" class="form-control"
+													disabled="disabled">
+													<th:block th:each="item:${listRole}">
+														<option th:if="${item.roleName} == ${account.roleName}"
+															th:value="${item.roleId}" th:text="${item.roleName}"
+															selected></option>
+														<option
+															th:unless="${item.roleName} == ${account.roleName}"
+															th:value="${item.roleId}" th:text="${item.roleName}"></option>
+													</th:block>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Trạng thái</label><select name="status"
+													th:field="*{status}" class="form-control"
+													disabled="disabled">
+													<th:block th:each="item:${listStatus}">
+														<option th:if="${item.id} == ${account.status}"
+															th:value="${item.id}" th:text="${item.status}" selected></option>
+														<option th:unless="${item.id} == ${account.status}"
+															th:value="${item.id}" th:text="${item.status}"></option>
+													</th:block>
+												</select>
+											</div>
+										</div>
+										<div class="cl-md-6" th:if="${#fields.hasErrors('global')}">
+											<div class="form-group">
+												<label th:each="err : ${#fields.errors('global')}"
+													th:text="${err}" class="text-dang"></label>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										
+										<div class="col-md-12 text-right">
+											<p class="text-danger" style="font-size: 18px">Bạn có
+												chắc chắn muốn xóa nhân viên này khỏi hệ thống hay không?</p>
+										</div>
+										<div class="col-md-12 text-right ">
+										<a th:href="@{/admin/account/list}" class="btn btn-warning mr-2">
+												<i class="fa fa-window-close"></i> Bỏ qua
+											</a>
+											<button type="submit" class="btn btn-danger ml-2">
+												<i class="fa fa-trash"></i> Đồng ý xóa
+											</button>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+		</div>
+	</div>
+</body>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/admin/dist/js/scripts.js/>"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+	crossorigin="anonymous"></script>
+<script src="/admin/dist/assets/demo/chart-area-demo.js/>"></script>
+<script src="/admin/dist/assets/demo/chart-bar-demo.js/>"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="/admin/dist/assets/demo/datatables-demo.js/>"></script>
+</html>

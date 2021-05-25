@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head >
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Admin - CKEditor</title>
+</head>
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/admin-menu::admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<form th:action="@{/admin/do-test-ckeditor}" method="POST">
+						<label for="content">Nội dung:</label>
+						<textarea name="content" id="content" rows="50"></textarea>
+						<input class="btn btn-dark" type="submit" value="Gửi">
+					</form>
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+		</div>
+	</div>
+	<script src="/ckfinder/static/samples/js/sf.js"></script>
+	<script src="/ckfinder/static/samples/js/tree-a.js"></script>
+	<script src="https://cdn.ckeditor.com/4.12.1/standard-all/ckeditor.js"></script>
+	<script src="/ckfinder/static/ckfinder.js"></script>
+	<script>
+		//Note: in this sample we use CKEditor with two extra plugins:
+		// - uploadimage to support pasting and dragging images,
+		// - image2 (instead of image) to provide images with captions.
+		// Additionally, the CSS style for the editing area has been slightly modified to provide responsive images during editing.
+		// All these modifications are not required by CKFinder, they just provide better user experience.
+		if (typeof CKEDITOR !== 'undefined') {
+			CKEDITOR.disableAutoInline = true;
+			CKEDITOR.addCss('img {max-width:100%; height: auto;}');
+			CKEDITOR.config.height = '600px';
+			var editor = CKEDITOR
+					.replace(
+							'content',
+							{
+								filebrowserBrowseUrl : '/ckfinder/static/ckfinder.html',
+								filebrowserImageBrowseUrl : '/ckfinder/static/ckfinder.html?type=Images',
+								filebrowserFlashBrowseUrl : '/ckfinder/static/ckfinder.html?type=Flash',
+								filebrowserUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Files',
+								filebrowserImageUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Images',
+								filebrowserFlashUploadUrl : '/ckfinder/connector/java/connector.java?command=QuickUpload&type=Flash'
+							});
+			CKFinder.setupCKEditor(editor);
+		} else {
+			document.getElementById('content').innerHTML = '<div class="tip-a tip-a-alert">This sample requires working Internet connection to load CKEditor 4 from CDN.</div>'
+		}
+	</script>
+</body>
+
+</html>

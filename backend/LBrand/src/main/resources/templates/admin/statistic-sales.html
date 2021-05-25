@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head>
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Admin - Thống Kê Đặt Bàn</title>
+</head>
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/admin-menu::admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<ol class="breadcrumb mb-4">
+						<li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+						<li class="breadcrumb-item"><a href="/admin/statistic/sales">Thống
+								Kê Đặt Bàn</a></li>
+					</ol>
+
+					<div class="card mb-4 mt-3">
+						<div class="card-header">
+							<i class="fas fa-filter"></i> Bộ lọc
+						</div>
+						<div class="card-body">
+							<form action="/admin/statistic/sales" method="get">
+								<div class="form-group">
+									<div class="row">
+
+										<!-- <div class="col-4">
+											<select name="month" id="month" class="form-control">
+												<option th:each="item: ${#numbers.sequence(1, 12)}"
+													th:value="${item}" th:selected="${month == item}"
+													th:text="'Tháng ' + ${item}">Tháng 1</option>
+											</select>
+										</div> -->
+
+										<div class="col-4">
+											<select name="year" id="year" class="form-control">
+												<option th:each="item: ${#numbers.sequence(2019, 2021)}"
+													th:value="${item}" th:selected="${year == item}"
+													th:text="'Năm ' + ${item}">Năm 2021</option>
+											</select>
+
+
+										</div>
+
+										<div class="col-4">
+											<button type="submit" class="btn btn-dark">Thống Kê</button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<div class="card mb-4 mt-3">
+						<div class="card-header">
+							<i class="fas fa-chart-line"></i> <span
+								th:text="${titleBookingStatistic}"></span>
+						</div>
+						<div class="card-body">
+							<div class="card-body">
+								<canvas id="bookingStatistic" width="100%" height="30"></canvas>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="card mb-4 mt-3">
+						<div class="card-header">
+							<i class="fas fa-chart-line"></i> <span
+								th:text="${titleProductBookingSalesStatistic}"></span>
+						</div>
+						<div class="card-body">
+							<div class="card-body">
+								<canvas id="productBookingSalesStatistic" width="100%" height="30"></canvas>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card mb-4 mt-3">
+						<div class="card-header">
+							<i class="fas fa-chart-line"></i> <span
+								th:text="${titleServiceBookingSalesStatistic}"></span>
+						</div>
+						<div class="card-body">
+							<div class="card-body">
+								<canvas id="serviceBookingSalesStatistic" width="100%" height="30"></canvas>
+							</div>
+						</div>
+					</div>
+					
+
+					<div class="row mb-4 d-flex">
+						<button type="button" class="btn btn-dark ml-auto mr-3"
+							onclick="window.location.href='/admin/dashboard'">Về
+							trang chủ</button>
+					</div>
+
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+
+		</div>
+	</div>
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+		crossorigin="anonymous"></script>
+
+	<script th:inline="javascript">
+		//Set new default font family and font color to mimic Bootstrap's default styling
+		Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+		Chart.defaults.global.defaultFontColor = '#292b2c';
+
+		// Area Chart Example
+		var bookingStatistic = document.getElementById("bookingStatistic");
+		var productBookingSalesStatistic = document.getElementById("productBookingSalesStatistic");
+		var serviceBookingSalesStatistic = document.getElementById("serviceBookingSalesStatistic");
+		
+		var bookingLineChart = new Chart(bookingStatistic, {
+			type : 'line',
+			data : {
+				labels : [ "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4",
+						"Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9",
+						"Tháng 10", "Tháng 11", "Tháng 12" ],
+				datasets : [ {
+					label : "Số lượng đơn đặt bàn",
+					lineTension : 0.3,
+					backgroundColor : "rgba(2,117,216,0.2)",
+					borderColor : "rgba(2,117,216,1)",
+					pointRadius : 5,
+					pointBackgroundColor : "rgba(2,117,216,1)",
+					pointBorderColor : "rgba(255,255,255,0.8)",
+					pointHoverRadius : 5,
+					pointHoverBackgroundColor : "rgba(2,117,216,1)",
+					pointHitRadius : 50,
+					pointBorderWidth : 2,
+					data : /*[[${listNumberOfBookingByYear}]]*/[ 18, 20, 32,
+							4, 2, 43, 48, 2, 32, 59, 22, 82 ]
+				} ],
+			},
+			options : {
+				scales : {
+					xAxes : [ {
+						time : {
+							unit : 'date'
+						},
+						gridLines : {
+							display : false
+						},
+						ticks : {
+							maxTicksLimit : 12
+						}
+					} ],
+					yAxes : [ {
+						ticks : {
+							min : 0,
+							max : /*[[${maxNumberOfBookings}]]*/ 100,
+							maxTicksLimit : 10
+						},
+						gridLines : {
+							color : "rgba(0, 0, 0, .125)",
+						}
+					} ],
+				},
+				legend : {
+					display : false
+				}
+			}
+		});
+		
+		var productBookingSalesLineChart = new Chart(productBookingSalesStatistic, {
+			type : 'line',
+			data : {
+				labels : [ "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4",
+						"Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9",
+						"Tháng 10", "Tháng 11", "Tháng 12" ],
+				datasets : [ {
+					label : "Doanh số",
+					lineTension : 0.3,
+					backgroundColor : "rgba(2,117,216,0.2)",
+					borderColor : "rgba(2,117,216,1)",
+					pointRadius : 5,
+					pointBackgroundColor : "rgba(2,117,216,1)",
+					pointBorderColor : "rgba(255,255,255,0.8)",
+					pointHoverRadius : 5,
+					pointHoverBackgroundColor : "rgba(2,117,216,1)",
+					pointHitRadius : 50,
+					pointBorderWidth : 2,
+					data : /*[[${listProductBookingSales}]]*/[ 18, 20, 32,
+							4, 2, 43, 48, 2, 32, 59, 22, 82 ]
+				} ],
+			},
+			options : {
+				scales : {
+					xAxes : [ {
+						time : {
+							unit : 'date'
+						},
+						gridLines : {
+							display : false
+						},
+						ticks : {
+							maxTicksLimit : 12
+						}
+					} ],
+					yAxes : [ {
+						ticks : {
+							min : 0,
+							max : /*[[${maxProductBookingSales}]]*/ 100,
+							maxTicksLimit : 10
+						},
+						gridLines : {
+							color : "rgba(0, 0, 0, .125)",
+						}
+					} ],
+				},
+				legend : {
+					display : false
+				}
+			}
+		});
+		
+		
+		var serviceBookingSalesLineChart = new Chart(serviceBookingSalesStatistic, {
+			type : 'line',
+			data : {
+				labels : [ "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4",
+						"Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9",
+						"Tháng 10", "Tháng 11", "Tháng 12" ],
+				datasets : [ {
+					label : "Doanh số",
+					lineTension : 0.3,
+					backgroundColor : "rgba(2,117,216,0.2)",
+					borderColor : "rgba(2,117,216,1)",
+					pointRadius : 5,
+					pointBackgroundColor : "rgba(2,117,216,1)",
+					pointBorderColor : "rgba(255,255,255,0.8)",
+					pointHoverRadius : 5,
+					pointHoverBackgroundColor : "rgba(2,117,216,1)",
+					pointHitRadius : 50,
+					pointBorderWidth : 2,
+					data : /*[[${listServiceBookingSales}]]*/[ 18, 20, 32,
+							4, 2, 43, 48, 2, 32, 59, 22, 82 ]
+				} ],
+			},
+			options : {
+				scales : {
+					xAxes : [ {
+						time : {
+							unit : 'date'
+						},
+						gridLines : {
+							display : false
+						},
+						ticks : {
+							maxTicksLimit : 12
+						}
+					} ],
+					yAxes : [ {
+						ticks : {
+							min : 0,
+							max : /*[[${maxServiceBookingSales}]]*/ 100,
+							maxTicksLimit : 10
+						},
+						gridLines : {
+							color : "rgba(0, 0, 0, .125)",
+						}
+					} ],
+				},
+				legend : {
+					display : false
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

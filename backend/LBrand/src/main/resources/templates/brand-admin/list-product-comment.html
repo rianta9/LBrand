@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- HEAD FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+<head>
+<th:block th:replace="/fragments/admin-fragments::admin-head-fragment"></th:block>
+<title>LBrand - Admin - Quản Lý Đánh Giá Sản Phẩm</title>
+</head>
+<body class="sb-nav-fixed">
+	<!-- HEADER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+		th:replace="/fragments/admin-fragments::admin-header-fragment"></nav>
+
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- MENU FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<nav class="sb-sidenav accordion sb-sidenav-dark"
+				id="sidenavAccordion"
+				th:replace="/fragments/brand-admin-menu::brand-admin-menu-fragment"></nav>
+		</div>
+		<div id="layoutSidenav_content">
+			<main>
+				<!-- MAIN CONTENT - EDIT CONTENT HEAR -->
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-12">
+							<ol class="breadcrumb mb-4">
+								<li class="breadcrumb-item"><a href="/brand-admin/dashboard">Dashboard</a></li>
+								<li class="breadcrumb-item active">Quản Lý Đánh Giá Sản Phẩm</li>
+							</ol>
+
+							<div class="card mb-4">
+								<div class="card-header">
+									<i class="fas fa-table mr-1"></i> DataTable
+								</div>
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-bordered" id="dataTable">
+											<thead>
+												<tr>
+													<th scope="col">ID</th>
+													<th scope="col">Sản Phẩm</th>
+													<th scope="col">Người Gửi</th>
+													<th scope="col">Nội Dung</th>
+													<th scope="col">Điểm</th>
+													<th scope="col">Ngày Gửi</th>
+													<th scope="col">Trạng thái</th>
+													<th scope="col">Action</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th scope="col">ID</th>
+													<th scope="col">Sản Phẩm</th>
+													<th scope="col">Người Gửi</th>
+													<th scope="col">Nội Dung</th>
+													<th scope="col">Điểm</th>
+													<th scope="col">Ngày Gửi</th>
+													<th scope="col">Trạng thái</th>
+													<th scope="col">Action</th>
+												</tr>
+											</tfoot>
+											<tbody id="data">
+												<!-- Insert data with this type -->
+												<tr th:each="item: ${listProductComment}">
+													<td th:text = "${item.productCommentId}">1</td>
+													<td th:text = "${item.product?.productName}">1</td>
+													<td th:text = "${item.comment?.account?.fullName}">Hoàng Quốc Khánh</td>
+													<td th:text = "${item.comment?.commentContent}">Thương hiệu tốt</td>
+													<td th:text = "${item.point}">10</td>
+													<td th:text = "${item.comment?.getStringDateCreated}">20/04/2021</td>
+													<th:block th:if="${item.status == 0}"><td>Chưa phản hồi</td></th:block>
+													<th:block th:unless="${item.status == 0}"><td>Đã phản hồi</td></th:block>
+													<td>
+														<div class="btn-group">
+														<a class="btn btn-outline-info btn-sm"
+																th:href="@{/brand-admin/product-comment/} + ${item.productCommentId} + @{/view}">Xem</a>
+															<a class="btn btn-outline-success btn-sm"
+																th:href="@{/brand-admin/product-comment/} + ${item.productCommentId} + @{/reply}">Reply</a>
+															
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<!-- END MAIN CONTENT -->
+			</main>
+
+
+			<!-- FOOTER FRAGMENT GET FROM ADMIN LAYOUT TEMPLATE...DO NOT CHANGE -->
+			<footer class="py-4 bg-light mt-auto"
+				th:replace="/fragments/admin-fragments::admin-footer-fragment"></footer>
+		</div>
+	</div>
+</body>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/admin/dist/js/scripts.js/>"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+	crossorigin="anonymous"></script>
+<script src="/admin/dist/assets/demo/chart-area-demo.js/>"></script>
+<script src="/admin/dist/assets/demo/chart-bar-demo.js/>"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="/admin/dist/assets/demo/datatables-demo.js/>"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#dataTable').DataTable();
+	});
+</script>
+</html>
